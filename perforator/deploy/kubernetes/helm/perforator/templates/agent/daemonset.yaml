@@ -89,10 +89,10 @@ spec:
           readOnly: true
         {{- end }}
         {{- range .Values.agent.mounts.extra }}
-          - name: {{ .name }}
-            mountPath: {{ .mountPath }}
-            subPath: {{ .subPath }}
-            readOnly: {{ .readOnly }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
         {{- end }}
       # it may be desirable to set a high priority class to ensure that a DaemonSet Pod
       # preempts running Pods
@@ -121,9 +121,9 @@ spec:
           path: /var/lib/docker/containers
       {{- end }}
       {{- range .Values.agent.mounts.extra }}
-        - name: {{ .name }}
-          configMap:
-            name: {{ .configMap }}
+      - name: {{ .name }}
+        configMap:
+          name: {{ .configMap }}
       {{- end }}
       {{- with .Values.agent.nodeSelector }}
       nodeSelector:

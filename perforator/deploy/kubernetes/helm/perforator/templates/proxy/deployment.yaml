@@ -85,10 +85,10 @@ spec:
           readOnly: true
         {{- end }}
         {{- range .Values.proxy.mounts.extra }}
-          - name: {{ .name }}
-            mountPath: {{ .mountPath }}
-            subPath: {{ .subPath }}
-            readOnly: {{ .readOnly }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
         {{- end }}
         env:
         - name: CLICKHOUSE_PASSWORD
@@ -115,9 +115,9 @@ spec:
           path: /var/lib/docker/containers
       {{- end }}
       {{- range .Values.proxy.mounts.extra }}
-        - name: {{ .name }}
-          configMap:
-            name: {{ .configMap }}
+      - name: {{ .name }}
+        configMap:
+          name: {{ .configMap }}
       {{- end }}
       {{- with .Values.proxy.nodeSelector }}
       nodeSelector:
