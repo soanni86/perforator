@@ -35,8 +35,8 @@ def run_command(cmd: t.List[str]) -> None:
 def main():
     args = parse_args()
 
-    original_ui = os.path.join(args.curdir, '../ui')
-    ui = os.path.join(args.bindir, 'ui')
+    original_ui = os.path.join(args.curdir, '../app')
+    ui = os.path.join(args.bindir, 'app')
     shutil.copytree(
         original_ui,
         ui,
