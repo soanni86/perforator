@@ -3,8 +3,8 @@ import React from 'react';
 import { Alert, Button, Loader } from '@gravity-ui/uikit';
 
 import { uiFactory } from 'src/factory';
-import type { RenderFormat } from 'src/generated/perforator/proto/perforator/perforator';
 import type { TaskResult } from 'src/models/Task';
+import { getFormat, isDiffTaskResult } from 'src/utils/renderingFormat';
 
 import { ErrorPanel } from '../ErrorPanel/ErrorPanel';
 
@@ -17,16 +17,9 @@ export interface TaskReportProps {
     task: TaskResult | null;
 }
 
-function getWellKnownKeysFromObject<O extends Record<string, any>, K extends keyof O>(o: O, keys: K[]): K[] {
-    return keys.filter(k => k in o);
-}
-
-const getFormatLike = (o: RenderFormat) => getWellKnownKeysFromObject(o, ['Flamegraph', 'JSONFlamegraph', 'RawProfile']);
-const getFormat = (o?: RenderFormat) => o ? getFormatLike(o)[0] : undefined;
-
 export const TaskReport: React.FC<TaskReportProps> = props => {
     const url = props.task?.Result?.MergeProfiles?.ProfileURL || props.task?.Result?.DiffProfiles?.ProfileURL;
-    const isDiff = 'DiffProfiles' in (props.task?.Result || {});
+    const isDiff = isDiffTaskResult(props.task);
     const mergeRenderFormat = props.task?.Spec?.MergeProfiles?.Format;
     const diffRenderFormat = props.task?.Spec?.DiffProfiles?.RenderFormat;
     const isLegacyFormat = isDiff && 'FlamegraphOptions' in (props.task?.Spec?.DiffProfiles || {});

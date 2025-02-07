@@ -7,6 +7,7 @@ import { Button, Card, ClipboardButton, Link } from '@gravity-ui/uikit';
 import { uiFactory } from 'src/factory';
 import type { TaskResult } from 'src/models/Task';
 import { TaskState } from 'src/models/Task';
+import { getFormat, isDiffTaskResult } from 'src/utils/renderingFormat';
 import { setPageTitle } from 'src/utils/title';
 
 import type { DefinitionListItem } from '../DefinitionList/DefinitionList';
@@ -35,6 +36,10 @@ export const TaskCard: React.FC<TaskCardProps> = props => {
     const diffQuery = diffSpec?.DiffQuery;
     const query = spec?.Query;
     const traceId = task?.Spec?.TraceBaggage?.Baggage?.traceparent?.match(/^[^-]{2}-([^-]*)-.*/)?.[1];
+
+    const isDiff = isDiffTaskResult(props.task);
+    const isLegacyFormat = isDiff && 'FlamegraphOptions' in (props.task?.Spec?.DiffProfiles || {});
+    const format = getFormat(spec?.Format) ?? getFormat(diffSpec?.RenderFormat) ?? (isLegacyFormat ? 'Flamegraph' : undefined);
 
     React.useMemo(() => {
         if (query?.Selector) {
@@ -91,7 +96,7 @@ export const TaskCard: React.FC<TaskCardProps> = props => {
         ['Baseline sample count', diffSpec?.BaselineQuery?.MaxSamples],
         ['Diff sample count', diffSpec?.DiffQuery?.MaxSamples],
         ['Trace', renderTraceLink()],
-        ['Flamegraph format', 'JSONFlamegraph' in (spec?.Format || {}) ? undefined : 'HTML'],
+        ['Flamegraph format', format === 'Flamegraph' ? 'HTML' : undefined],
     ];
 
     return (
