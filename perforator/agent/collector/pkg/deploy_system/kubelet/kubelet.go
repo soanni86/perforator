@@ -15,7 +15,9 @@ import (
 	kube "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 
+	"github.com/yandex/perforator/library/go/core/log"
 	"github.com/yandex/perforator/perforator/internal/kubeletclient"
+	"github.com/yandex/perforator/perforator/pkg/xlog"
 )
 
 const (
@@ -178,7 +180,7 @@ func (p *PodsLister) getTopology(topologyLableKey string) (string, error) {
 	return node.Labels[topologyLableKey], nil
 }
 
-func getOwner(pod *kube.Pod) (string, error) {
+func getOwner(ctx context.Context, logger xlog.Logger, pod *kube.Pod) (string, error) {
 	if len(pod.OwnerReferences) == 0 || !*pod.OwnerReferences[0].Controller {
 		return pod.ObjectMeta.Name, nil
 	}
@@ -199,11 +201,18 @@ func getOwner(pod *kube.Pod) (string, error) {
 		}
 
 		return name[:idx], nil
-	case "DaemonSet", "StatefulSet":
-		return pod.OwnerReferences[0].Name, nil
+	case "DaemonSet", "StatefulSet", "Job":
 	default:
-		return "", fmt.Errorf("unknown resource manager for the pod: %v; pod name: %v", pod.OwnerReferences[0].Kind, pod.ObjectMeta.Name)
+		// TODO: this warning will fire for custom controllers, it looks unfortunate
+		logger.Warn(
+			ctx,
+			"unknown resource manager for the pod",
+			log.String("ns", pod.ObjectMeta.Namespace),
+			log.String("pod", pod.ObjectMeta.Name),
+			log.String("kind", pod.OwnerReferences[0].Kind),
+		)
 	}
+	return pod.OwnerReferences[0].Name, nil
 
 }
 

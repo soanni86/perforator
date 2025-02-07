@@ -19,6 +19,6 @@ type Pod interface {
 
 type PodsLister interface {
 	Init(ctx context.Context) error
-	List() ([]Pod, error)
+	List(ctx context.Context) ([]Pod, error)
 	GetHost() string
 }

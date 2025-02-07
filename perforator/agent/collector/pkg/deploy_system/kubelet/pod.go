@@ -11,6 +11,7 @@ import (
 
 	deploysystemmodel "github.com/yandex/perforator/perforator/agent/collector/pkg/deploy_system/model"
 	"github.com/yandex/perforator/perforator/internal/kubeletclient"
+	"github.com/yandex/perforator/perforator/pkg/xlog"
 )
 
 const (
@@ -81,6 +82,7 @@ func (p *Pod) IsPerforatorEnabled() (*bool, string) {
 }
 
 type PodsLister struct {
+	logger                   xlog.Logger
 	client                   *kubeletclient.Client
 	nodeName                 string
 	nodeURL                  string
@@ -96,7 +98,7 @@ func (p *PodsLister) GetHost() string {
 }
 
 // Implements deploysystemmodel.PodsLister
-func (p *PodsLister) List() ([]deploysystemmodel.Pod, error) {
+func (p *PodsLister) List(ctx context.Context) ([]deploysystemmodel.Pod, error) {
 	pods, err := p.getPods()
 	if err != nil {
 		return nil, err
@@ -135,7 +137,7 @@ func (p *PodsLister) List() ([]deploysystemmodel.Pod, error) {
 			return nil, err
 		}
 
-		service, err := getOwner(&pod)
+		service, err := getOwner(ctx, p.logger, &pod)
 		if err != nil {
 			return nil, err
 		}
@@ -153,7 +155,7 @@ func (p *PodsLister) List() ([]deploysystemmodel.Pod, error) {
 	return res, nil
 }
 
-func NewPodsLister(topologyLableKey string, kubeletSettingsOverrides KubeletSettingsOverrides) (*PodsLister, error) {
+func NewPodsLister(logger xlog.Logger, topologyLableKey string, kubeletSettingsOverrides KubeletSettingsOverrides) (*PodsLister, error) {
 	if topologyLableKey == "" {
 		topologyLableKey = defaultTopologyLableKey
 	}
@@ -178,6 +180,7 @@ func NewPodsLister(topologyLableKey string, kubeletSettingsOverrides KubeletSett
 	client := kubeletclient.New(httpclient)
 
 	podLister := &PodsLister{
+		logger:                   logger,
 		nodeName:                 name,
 		nodeURL:                  url + "/pods",
 		client:                   client,

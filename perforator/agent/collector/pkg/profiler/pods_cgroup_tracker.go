@@ -13,6 +13,7 @@ import (
 	"github.com/yandex/perforator/perforator/agent/collector/pkg/deploy_system/kubelet"
 	deploysystemmodel "github.com/yandex/perforator/perforator/agent/collector/pkg/deploy_system/model"
 	"github.com/yandex/perforator/perforator/pkg/linux/cpuinfo"
+	"github.com/yandex/perforator/perforator/pkg/xlog"
 )
 
 const (
@@ -143,7 +144,7 @@ func (t *PodsCgroupTracker) rebuildWorkloadInfo(pods []deploysystemmodel.Pod) {
 }
 
 func (t *PodsCgroupTracker) refreshCgroups(ctx context.Context) ([]*CgroupConfig, error) {
-	pods, err := t.podsLister.List()
+	pods, err := t.podsLister.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -224,7 +225,7 @@ func newPodsCgroupTracker(c *config.PodsDeploySystemConfig, l log.Logger) (*Pods
 		kubeletOverrides.CgroupDriver = c.KubernetesConfig.KubeletCgroupDriver
 		kubeletOverrides.CgroupRoot = c.KubernetesConfig.KubeletCgroupRoot
 
-		podsLister, err = kubelet.NewPodsLister(c.KubernetesConfig.TopologyLableKey, kubeletOverrides)
+		podsLister, err = kubelet.NewPodsLister(xlog.New(l), c.KubernetesConfig.TopologyLableKey, kubeletOverrides)
 		if err != nil {
 			return nil, err
 		}
