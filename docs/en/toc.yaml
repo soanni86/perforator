@@ -40,6 +40,10 @@ items:
           href: guides/cli/record.md
         - name: Set up Microscope
           href: guides/cli/microscope.md
+    - name: UI
+      items:
+        - name: Diffs
+          href: guides/diff.md
     - name: Profiling JVM applications
       href: guides/jvm.md
     - name: Using Perforator for continuous profile-guided optimization (PGO)
