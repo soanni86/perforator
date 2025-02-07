@@ -32,7 +32,7 @@ Example usage
 ```bash
 # See above for possible ${COMPONENT} values
 # Add flags such as `--tag` or `--push` as necessary
-docker build -f Dockerfile.build --target ${COMPONENT} ../../..
+docker build -f Dockerfile.build --platform linux/amd64 --target ${COMPONENT} ../../..
 ```
 
 This command will build the desired component and create an image.
