@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card, ClipboardButton, Link } from '@gravity-ui/uikit';
 
 import { uiFactory } from 'src/factory';
-import type { TaskResult } from 'src/models/Task';
+import type { ProfileTaskQuery, TaskResult } from 'src/models/Task';
 import { TaskState } from 'src/models/Task';
+import { redirectToTaskPage } from 'src/utils/profileTask';
 import { getFormat, isDiffTaskResult } from 'src/utils/renderingFormat';
 import { setPageTitle } from 'src/utils/title';
 
@@ -116,6 +117,17 @@ export const TaskCard: React.FC<TaskCardProps> = props => {
                     >
                         {'Compare with\u2026'}
                     </Button>
+                ) : null}
+                {format !== 'RawProfile' && !isDiff ? (
+                    <Button
+                        onClick={() =>
+                            redirectToTaskPage(navigate, {
+                                selector: query?.Selector,
+                                maxProfiles: spec?.MaxSamples,
+                                rawProfile: 'true',
+                            } as ProfileTaskQuery)
+                        }
+                    >Get pprof...</Button>
                 ) : null}
             </div>
             <h2 className="task-card__title">Task {props.taskId}</h2>
