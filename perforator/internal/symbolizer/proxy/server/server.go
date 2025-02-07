@@ -191,6 +191,11 @@ func NewPerforatorServer(
 		}
 	}
 
+	bannedUsers, err := NewBannedUsersRegistry(ctx, l, reg, storageBundle.DBs.PostgresCluster)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create banned users poller: %w", err)
+	}
+
 	downloaderInstance, binaryDownloader, gsymDownloader, err := downloader.CreateDownloaders(
 		conf.BinaryProvider.FileCache,
 		conf.BinaryProvider.MaxSimultaneousDownloads,
@@ -265,7 +270,7 @@ func NewPerforatorServer(
 		microscopeStorage: storageBundle.MicroscopeStorage,
 		profileStorage:    storageBundle.ProfileStorage,
 		renderedProfiles:  renderedProfiles,
-		bannedUsers:       NewBannedUsersRegistry(ctx, l, reg, storageBundle.DBs),
+		bannedUsers:       bannedUsers,
 		tasks:             storageBundle.TaskStorage,
 		tasksemaphore:     semaphore.NewWeighted(conf.Tasks.ConcurrencyLimit),
 		httpclient:        resty.New().SetTimeout(time.Hour).SetRetryCount(3),
@@ -1571,6 +1576,14 @@ func (s *PerforatorServer) Run(ctx context.Context, conf *RunConfig) error {
 	})
 
 	g.Go(func() error {
+		err := s.bannedUsers.RunPoller(context.Background())
+		if err != nil {
+			s.l.Error(ctx, "Banned users poller failed", log.Error(err))
+		}
+		return err
+	})
+
+	g.Go(func() error {
 		err := s.runMetricsServer(ctx, conf.MetricsPort)
 		if err != nil {
 			s.l.Error(ctx, "Failed metrics server", log.Error(err))
@@ -1602,7 +1615,11 @@ func (s *PerforatorServer) Run(ctx context.Context, conf *RunConfig) error {
 		return err
 	})
 
-	return g.Wait()
+	err := g.Wait()
+	if err != nil {
+		return fmt.Errorf("proxy server failed: %w", err)
+	}
+	return nil
 }
 
 func (s *PerforatorServer) mergeProfiles(
