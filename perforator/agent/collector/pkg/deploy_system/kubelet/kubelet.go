@@ -16,6 +16,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/yandex/perforator/library/go/core/log"
+	"github.com/yandex/perforator/library/go/slices"
 	"github.com/yandex/perforator/perforator/internal/kubeletclient"
 	"github.com/yandex/perforator/perforator/pkg/xlog"
 )
@@ -89,18 +90,35 @@ type kubeletConfigWrapper struct {
 }
 
 type kubeletConfig struct {
-	CgroupRoot   string `json:"cgroupRoot"`
-	CgroupDriver string `json:"cgroupDriver"`
+	CgroupRoot    string `json:"cgroupRoot"`
+	CgroupDriver  string `json:"cgroupDriver"`
+	CgroupsPerQOS bool   `json:"cgroupsPerQOS"`
 }
 
 type KubeletSettingsOverrides struct {
-	CgroupRoot   string `json:"cgroupRoot"`
-	CgroupDriver string `json:"cgroupDriver"`
+	CgroupRoot            []string `json:"cgroupRoot"`
+	CgroupDriver          string   `json:"cgroupDriver"`
+	CgroupsQOSMode        string   `json:"cgroupsQOSMode"`
+	CgroupContainerPrefix string   `json:"cgroupContainerPrefix"`
 }
 
+type cgroupsQOSMode int
+
+const (
+	// best-effort and burstable classes have subdirectories
+	cgroupsQOSModeNotGuaranteed cgroupsQOSMode = iota
+	// qos has no effect on cgroup name
+	cgroupsQOSModeNone
+	// all modes have subdirectories
+	// TODO: check if this mode is possible at all
+	cgroupsQOSModeAll
+)
+
 type kubeletCgroupSettings struct {
-	root    string
-	systemd bool
+	root            []string
+	systemd         bool
+	qosMode         cgroupsQOSMode
+	containerPrefix string
 }
 
 func resolveKubeletCgroupSettings(ctx context.Context, client *kubeletclient.Client) (kubeletCgroupSettings, error) {
@@ -131,12 +149,21 @@ func resolveKubeletCgroupSettings(ctx context.Context, client *kubeletclient.Cli
 		return s, fmt.Errorf("error unmarshalling /configz response body: %w", err)
 	}
 
-	if config.Config.CgroupDriver == "systemd" {
-		s.root = path.Join(config.Config.CgroupRoot, "kubepods.slice")
-		s.systemd = true
-	} else if config.Config.CgroupDriver == "cgroupfs" {
-		s.root = path.Join(config.Config.CgroupRoot, "kubepods")
+	if config.Config.CgroupsPerQOS {
+		s.qosMode = cgroupsQOSModeNotGuaranteed
 	} else {
+		s.qosMode = cgroupsQOSModeNone
+	}
+
+	s.root = strings.Split(config.Config.CgroupRoot, "/")
+	s.root = slices.Filter(s.root, func(s string) bool { return s != "" })
+	s.root = append(s.root, "kubepods")
+	if config.Config.CgroupDriver == "systemd" {
+		s.systemd = true
+		// https://github.com/containerd/containerd/blob/59c8cf6ea5f4175ad512914dd5ce554942bf144f/internal/cri/server/podsandbox/helpers_linux.go#L67
+		// TODO(PERFORATOR-682): detect container runtime (containerd / crio) and set containerPrefix accordingly.
+		s.containerPrefix = "cri-containerd-"
+	} else if config.Config.CgroupDriver != "cgroupfs" {
 		return kubeletCgroupSettings{}, fmt.Errorf("unsupported cgroup driver %q (expected systemd or cgroupfs)", config.Config.CgroupDriver)
 	}
 	return s, nil
@@ -224,21 +251,58 @@ type podInfo struct {
 	QOSClass kube.PodQOSClass
 }
 
+func makeSystemDPath(parts []string) string {
+	// see https://github.com/kubernetes/kubernetes/blob/491a23f0793a16a3036d17494c29b7a403b604d6/pkg/kubelet/cm/cgroup_manager_linux.go#L69
+	// and https://github.com/kubernetes/kubernetes/blob/491a23f0793a16a3036d17494c29b7a403b604d6/pkg/kubelet/cm/cgroup_manager_linux.go#L82
+	// TODO: probably we should just call that function instead
+	var acc string
+	var converted []string
+	for _, part := range parts {
+		part = strings.Replace(part, "-", "_", -1)
+		if acc != "" {
+			part = acc + "-" + part
+		}
+		converted = append(converted, part+".slice")
+		acc = part
+	}
+	return path.Join(converted...)
+}
+
 // BuildCgroup returns unified cgroup for cgroup v2 in a format like:
 // "/sys/fs/cgroup/kubepods/<POD_QOSClass>/pod<POD_UID>"
 // or freezer cgroup for cgroup v1
 // "/sys/fs/cgroup/freezer/kubepods/<POD_QOSClass>/pod<POD_UID>".
 func buildCgroup(settings *kubeletCgroupSettings, pod podInfo) (string, error) {
 	podUID := string(pod.UID)
-	podQOSClass, ok := qosClassToCgroupSubstr[pod.QOSClass]
-	if !ok {
-		return "", fmt.Errorf("error building pod's cgroup: got unknown PodQOSClass: %v. Pod's UID: %v", pod.QOSClass, pod.UID)
-	}
-	podName := "pod" + podUID
-	if settings.systemd {
-		podName = fmt.Sprintf("kubepods-%s-pod%s.scope", podQOSClass, podUID)
-		podQOSClass = "kubepods-" + podQOSClass + ".slice"
+	var includeQOS bool
+	switch settings.qosMode {
+	case cgroupsQOSModeAll:
+		includeQOS = true
+	case cgroupsQOSModeNotGuaranteed:
+		includeQOS = pod.QOSClass != kube.PodQOSGuaranteed
+	case cgroupsQOSModeNone:
+		includeQOS = false
+	default:
+		return "", fmt.Errorf("error building pod's cgroup: unknown qosMode: %v", settings.qosMode)
 	}
 
-	return path.Join(settings.root, podQOSClass, podName), nil
+	podName := "pod" + podUID
+
+	var nameParts []string
+
+	if includeQOS {
+		podQOSClass, ok := qosClassToCgroupSubstr[pod.QOSClass]
+		if !ok {
+			return "", fmt.Errorf("error building pod's cgroup: got unknown PodQOSClass: %v. Pod's UID: %v", pod.QOSClass, pod.UID)
+		}
+		nameParts = append(settings.root[:], podQOSClass, podName)
+	} else {
+		nameParts = append(settings.root[:], podName)
+	}
+
+	if settings.systemd {
+		return "/" + makeSystemDPath(nameParts), nil
+	} else {
+		return "/" + path.Join(nameParts...), nil
+	}
 }

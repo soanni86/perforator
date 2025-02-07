@@ -118,7 +118,7 @@ func (p *PodsLister) List(ctx context.Context) ([]deploysystemmodel.Pod, error) 
 			if len(parts) != 2 {
 				continue
 			}
-			containerCgroup := parts[1]
+			containerCgroup := p.kubeletSettings.containerPrefix + parts[1]
 			if p.kubeletSettings.systemd {
 				containerCgroup = containerCgroup + ".scope"
 			}
@@ -201,7 +201,10 @@ func (p *PodsLister) Init(ctx context.Context) error {
 	if p.kubeletSettingsOverrides.CgroupDriver == "" {
 		resolveNeeded = true
 	}
-	if p.kubeletSettingsOverrides.CgroupRoot == "" {
+	if len(p.kubeletSettingsOverrides.CgroupRoot) == 0 {
+		resolveNeeded = true
+	}
+	if p.kubeletSettingsOverrides.CgroupsQOSMode == "" {
 		resolveNeeded = true
 	}
 	var resolved kubeletCgroupSettings
@@ -219,8 +222,19 @@ func (p *PodsLister) Init(ctx context.Context) error {
 			return fmt.Errorf("invalid value for cgroup driver override (expected cgroupfs or systemd): %q", p.kubeletSettingsOverrides.CgroupDriver)
 		}
 	}
-	if p.kubeletSettingsOverrides.CgroupRoot != "" {
+	if len(p.kubeletSettingsOverrides.CgroupRoot) > 0 {
 		resolved.root = p.kubeletSettingsOverrides.CgroupRoot
+	}
+	switch p.kubeletSettingsOverrides.CgroupsQOSMode {
+	case "none":
+		resolved.qosMode = cgroupsQOSModeNone
+	case "not-guaranteed":
+		resolved.qosMode = cgroupsQOSModeNotGuaranteed
+	case "all":
+		resolved.qosMode = cgroupsQOSModeAll
+	case "":
+	default:
+		return fmt.Errorf("invalid value for cgroups qos mode override (expected none, not-guaranteed or all): %q", p.kubeletSettingsOverrides.CgroupsQOSMode)
 	}
 	p.kubeletSettings = resolved
 	return nil

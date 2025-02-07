@@ -76,9 +76,11 @@ type PodProfileOptions struct {
 }
 
 type KubernetesConfig struct {
-	TopologyLableKey    string `yaml:"topology_lable_key,omitempty"`
-	KubeletCgroupRoot   string `yaml:"kubelet_cgroup_root,omitempty"`
-	KubeletCgroupDriver string `yaml:"kubelet_cgroup_driver,omitempty"`
+	TopologyLableKey             string   `yaml:"topology_lable_key,omitempty"`
+	KubeletCgroupRoot            []string `yaml:"kubelet_cgroup_root,omitempty"`
+	KubeletCgroupDriver          string   `yaml:"kubelet_cgroup_driver,omitempty"`
+	KubeletCgroupQOSMode         string   `yaml:"kubelet_cgroup_qos_mode,omitempty"`
+	KubeletCgroupContainerPrefix string   `yaml:"kubelet_cgroup_container_prefix,omitempty"`
 }
 
 type PodsDeploySystemConfig struct {
