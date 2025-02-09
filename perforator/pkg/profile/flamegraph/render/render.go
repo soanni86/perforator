@@ -682,6 +682,7 @@ func (f *FlameGraph) addProfile(p *profile.Profile, baseline bool) {
 			sampleIndex = i
 		}
 	}
+	f.SetSampleType(p.SampleType[sampleIndex].Unit)
 
 	for _, sample := range p.Sample {
 		procinfo := labels.ExtractProcessInfo(sample)
