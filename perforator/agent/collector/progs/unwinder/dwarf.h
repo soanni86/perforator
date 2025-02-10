@@ -121,7 +121,16 @@ BPF_MAP(unwind_roots, BPF_MAP_TYPE_HASH, binary_id, page_id, MAX_BINARIES);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-NOINLINE bool locate_rule(struct unwind_table_page_leaf* page, u64 pc, struct unwind_rule* rule) {
+BPF_MAP(heap, BPF_MAP_TYPE_PERCPU_ARRAY, u32, struct dwarf_unwind_context, 1);
+
+static ALWAYS_INLINE struct dwarf_unwind_context* dwarf_get_context() {
+    u32 zero = 0;
+    return bpf_map_lookup_elem(&heap, &zero);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+static NOINLINE bool locate_rule(struct unwind_table_page_leaf* page, u64 pc, struct unwind_rule* rule) {
     if (page == NULL) {
         return false;
     }
@@ -334,7 +343,7 @@ ALWAYS_INLINE bool dwarf_cfi_eval_ra(
     return read_return_address((void*)address, &next->rip);
 }
 
-NOINLINE bool dwarf_cfi_eval(
+static NOINLINE bool dwarf_cfi_eval(
     struct dwarf_cfi_context* prev,
     struct dwarf_cfi_context* next,
     struct unwind_rule* rule
@@ -576,10 +585,10 @@ enum dwarf_unwind_step_result {
 // rsp2    -> [....]
 // rsp2-8  -> [ra2 ]
 // rsp2-16 -> [rbp2]
-enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step_fp(
-    struct dwarf_unwind_context* ctx
-) {
+NOINLINE enum dwarf_unwind_step_result dwarf_unwind_step_fp() {
+    struct dwarf_unwind_context* ctx = dwarf_get_context();
     if (ctx == NULL) {
+        DWARF_TRACE("failed to lookup dwarf_unwind_context\n");
         return DWARF_UNWIND_STEP_FAILED;
     }
 
@@ -608,23 +617,33 @@ enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step_fp(
     return DWARF_UNWIND_STEP_CONTINUE;
 }
 
-// Perform one step of dwarf unwinding.
-// This function contains heavy loop and is called inside heavy loop, so it MUST be marked with NOINLINE.
-// The verifier struggles with the outermost loop otherwise.
-static enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step(
+static bool NOINLINE dwarf_unwind_record_stack_frame(
     struct dwarf_unwind_context* ctx,
     struct stack* stack
 ) {
     if (stack == NULL || ctx == NULL) {
-        return DWARF_UNWIND_STEP_FAILED;
+        return false;
     }
 
     if (stack->len >= DWARF_UNWIND_MAX_STACK_SIZE || stack->len >= STACK_SIZE) {
         metric_increment(METRIC_DWARF_ERROR_TOOMANYFRAMES_COUNT);
         ctx->error = DWARF_UNWIND_ERROR_TOO_MANY_FRAMES;
-        return DWARF_UNWIND_STEP_FAILED;
+        return false;
     } else {
         stack->ips[stack->len++] = ctx->cfi.rip;
+    }
+
+    return true;
+}
+
+// Perform one step of dwarf unwinding.
+// This function contains heavy loop and is called inside heavy loop, so it MUST be marked with NOINLINE.
+// The verifier struggles with the outermost loop otherwise.
+enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step() {
+    struct dwarf_unwind_context* ctx = dwarf_get_context();
+    if (ctx == NULL) {
+        DWARF_TRACE("failed to lookup dwarf_unwind_context\n");
+        return DWARF_UNWIND_STEP_FAILED;
     }
 
     /*
@@ -643,7 +662,7 @@ static enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step(
         // Try to unwind one frame using frame pointers.
         metric_increment(METRIC_DWARF_ERROR_NORULEFORINSTRUCTION_COUNT);
         DWARF_TRACE("failed to locate rule, try fp\n");
-        return dwarf_unwind_step_fp(ctx);
+        return dwarf_unwind_step_fp();
     }
 
 #ifdef TRACE_DWARF_UNWINDING
@@ -679,14 +698,9 @@ static enum dwarf_unwind_step_result NOINLINE dwarf_unwind_step(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-BPF_MAP(heap, BPF_MAP_TYPE_PERCPU_ARRAY, u32, struct dwarf_unwind_context, 1);
-
-////////////////////////////////////////////////////////////////////////////////
-
 static ALWAYS_INLINE int dwarf_collect_stack(struct user_regs* regs, struct stack* stack) {
-    u32 zero = 0;
-    struct dwarf_unwind_context* ctx = bpf_map_lookup_elem(&heap, &zero);
-    if (ctx == 0) {
+    struct dwarf_unwind_context* ctx = dwarf_get_context();
+    if (ctx == NULL) {
         DWARF_TRACE("failed to load unwinder state from heap\n");
         return 0;
     }
@@ -701,8 +715,13 @@ static ALWAYS_INLINE int dwarf_collect_stack(struct user_regs* regs, struct stac
     int res = -1;
     for (int i = 0; i < DWARF_UNWIND_MAX_STACK_SIZE; ++i) {
         DWARF_TRACE("start iteration %d\n", i);
-        enum dwarf_unwind_step_result res = dwarf_unwind_step(ctx, stack);
-        switch (res) {
+        if (!dwarf_unwind_record_stack_frame(ctx, stack)) {
+            DWARF_TRACE("failed to record stack frame\n");
+            goto done;
+        }
+
+        enum dwarf_unwind_step_result step_result = dwarf_unwind_step();
+        switch (step_result) {
         case DWARF_UNWIND_STEP_FAILED:
             DWARF_TRACE("dwarf unwinding failed at step %d: %d\n", i, ctx->error);
             res = -1;
