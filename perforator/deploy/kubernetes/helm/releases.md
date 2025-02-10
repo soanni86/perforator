@@ -1,3 +1,8 @@
+# Unreleased
+
+Enhancements:
++ Allow customizing environment variables for all components
+
 # 0.2.4
 
 Fixes:

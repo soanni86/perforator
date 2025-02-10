@@ -24,7 +24,7 @@ metadata:
   {{- with .Values.databases.postgresql.migrations.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  finalizers: {{ .Values.databases.clickhouse.migrations.finalizers }}
+  finalizers: {{ .Values.databases.postgresql.migrations.finalizers }}
 spec:
   template:
     spec:
@@ -43,5 +43,9 @@ spec:
           valueFrom:
             secretKeyRef:
               {{ include "perforator.secretKeyRef.postgresql" . | nindent 14 }}
-  ttlSecondsAfterFinished: {{ .Values.databases.clickhouse.migrations.ttlSecondsAfterFinished }}
+        {{- range .Values.databases.postgresql.migrations.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
+  ttlSecondsAfterFinished: {{ .Values.databases.postgresql.migrations.ttlSecondsAfterFinished }}
 {{- end}}

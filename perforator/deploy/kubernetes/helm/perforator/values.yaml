@@ -47,6 +47,10 @@ databases:
       ttlSecondsAfterFinished: 259200
       # Custom annotations
       annotations: {}
+      # Additional environment variables to set
+      extraEnv: []
+      # - name: ...
+      #   value: ...
 
   clickhouse:
     replicas: []
@@ -86,6 +90,10 @@ databases:
       ttlSecondsAfterFinished: 259200
       # Custom annotations
       annotations: {}
+      # Additional environment variables to set
+      extraEnv: []
+      # - name: ...
+      #   value: ...
 
   s3:
     buckets:
@@ -178,6 +186,11 @@ agent:
   affinity: {}
   # Annotations to add to perforator agent daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   daemonset:
     # Perforator agent daemon set updateStrategy.
     updateStrategy: {}
@@ -280,6 +293,11 @@ storage:
   affinity: {}
   # Annotations to add to perforator storage daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   deployment:
     # Perforator storage deployment updateStrategy.
     updateStrategy: {}
@@ -406,6 +424,11 @@ proxy:
   affinity: {}
   # Annotations to add to perforator proxy daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   deployment:
     # Perforator proxy deployment updateStrategy.
     updateStrategy: {}
@@ -536,6 +559,11 @@ web:
   affinity: {}
   # Annotations to add to perforator proxy daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   deployment:
     # Perforator proxy deployment updateStrategy.
     updateStrategy: {}
@@ -704,6 +732,11 @@ gc:
   affinity: {}
   # Annotations to add to perforator gc daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   deployment:
     # Perforator gc deployment updateStrategy.
     updateStrategy: {}
@@ -806,6 +839,11 @@ offlineprocessing:
   affinity: {}
   # Annotations to add to perforator offlineprocessing daemon set.
   annotations: {}
+  # Additional environment variables to set
+  extraEnv: []
+  # - name: ...
+  #   value: ...
+
   deployment:
     # Perforator offlineprocessing deployment updateStrategy.
     updateStrategy: {}

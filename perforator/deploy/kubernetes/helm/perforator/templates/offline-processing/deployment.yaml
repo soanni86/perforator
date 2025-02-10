@@ -88,6 +88,10 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef: {{ include "perforator.secretKeyRef.postgresql" . | nindent 14 }}
+        {{- range .Values.offlineprocessing.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
       volumes:
       - name: cache
         emptyDir: {}

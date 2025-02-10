@@ -43,5 +43,9 @@ spec:
           valueFrom:
             secretKeyRef:
               {{ include "perforator.secretKeyRef.clickhouse" . | nindent 14 }}
+        {{- range .Values.databases.clickhouse.migrations.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
   ttlSecondsAfterFinished: {{ .Values.databases.clickhouse.migrations.ttlSecondsAfterFinished }}
 {{- end}}

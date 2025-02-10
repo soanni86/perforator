@@ -95,6 +95,10 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef: {{ include "perforator.secretKeyRef.postgresql" . | nindent 14 }}
+        {{- range .Values.storage.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
       volumes:
       - name: storage-tls
         secret:

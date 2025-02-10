@@ -49,6 +49,11 @@ spec:
           {{- range .Values.web.extraArgs }}
         - {{ . }}
           {{- end}}
+        env:
+        {{- range .Values.web.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
         resources:
         {{- toYaml .Values.web.resources | nindent 10 }}
         securityContext:

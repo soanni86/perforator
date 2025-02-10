@@ -54,6 +54,10 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+        {{- range .Values.agent.extraEnv }}
+        - name: {{ .name }}
+          value: {{ .value }}
+        {{- end }}
         resources:
         {{- toYaml .Values.agent.resources | nindent 10 }}
         {{- with .Values.agent.containerSecurityContext }}
