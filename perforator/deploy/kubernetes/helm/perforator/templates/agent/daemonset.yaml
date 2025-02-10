@@ -50,10 +50,14 @@ spec:
         - {{ . }}
           {{- end}}
         env:
-          - name: NODE_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: spec.nodeName
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         {{- range .Values.agent.extraEnv }}
         - name: {{ .name }}
           value: {{ .value }}

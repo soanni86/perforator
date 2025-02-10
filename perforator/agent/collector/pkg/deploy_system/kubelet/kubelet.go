@@ -25,6 +25,7 @@ const (
 	tokenPath   = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 	kubeletPort = "10250"
 	nodeEnv     = "NODE_NAME"
+	nodeIP      = "NODE_IP"
 
 	kubernetesAPIServerHost = "kubernetes.default.svc.cluster.local"
 
@@ -47,11 +48,22 @@ func getNodeName() (string, error) {
 }
 
 func getNodeURL() (string, error) {
-	name, err := getNodeName()
-	if err != nil {
-		return "", fmt.Errorf("can't get node url %w", err)
+	var host string
+	ip := os.Getenv(nodeIP)
+	if ip != "" {
+		if strings.Contains(ip, ":") {
+			// ipv6 address
+			ip = fmt.Sprintf("[%s]", ip)
+		}
+		host = ip
+	} else {
+		name, err := getNodeName()
+		if err != nil {
+			return "", fmt.Errorf("can't get node url %w", err)
+		}
+		host = name
 	}
-	url := fmt.Sprintf("https://%s:%s", name, kubeletPort)
+	url := fmt.Sprintf("https://%s:%s", host, kubeletPort)
 
 	return url, nil
 }
