@@ -263,7 +263,7 @@ func newMigrate(
 			queryParams = append(queryParams, "secure=true")
 		}
 		if tls.skipTLSVerification {
-			queryParams = append(queryParams, "skip_verify=false")
+			queryParams = append(queryParams, "skip_verify=true")
 		}
 		if tls.serverCA != "" {
 			return nil, errors.New("tls-ca is not supported for clickhouse")
