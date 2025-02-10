@@ -29,41 +29,46 @@ RUN cd autofdo && \
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS agent
+FROM ubuntu:24.04 AS base
+RUN apt-get update && apt-get install -y ca-certificates
+
+####################################################################################################################
+
+FROM base AS agent
 COPY --from=build /out/perforator/bundle/agent /perforator/agent
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS gc
+FROM base AS gc
 COPY --from=build /out/perforator/bundle/gc /perforator/gc
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS storage
+FROM base AS storage
 COPY --from=build /out/perforator/bundle/storage /perforator/storage
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS proxy
+FROM base AS proxy
 COPY --from=build /out/perforator/bundle/proxy /perforator/proxy
 COPY --from=autofdo_build /autofdo/autofdo/build/create_llvm_prof /perforator/create_llvm_prof
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS web
+FROM base AS web
 COPY --from=build /out/perforator/bundle/web /perforator/web
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS migrate
+FROM base AS migrate
 COPY --from=build /out/perforator/bundle/migrate /perforator/migrate
 
 ####################################################################################################################
 
-FROM ubuntu:24.04 AS offline_processing
+FROM base AS offline_processing
 COPY --from=build /out/perforator/bundle/offline_processing /perforator/offline_processing
 
 ####################################################################################################################
 
-FROM scratch AS cli
+FROM base AS cli
 COPY --from=build /out/perforator/bundle/cli /perforator/cli
