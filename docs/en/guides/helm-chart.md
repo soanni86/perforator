@@ -30,7 +30,7 @@ helm repo update
 
 ## Installing Helm Chart
 
-Create file `my-values.yaml` and add credentials for databases
+Create file `my-values.yaml` and add necessary values:
 
 my-values.yaml example
 ```yaml
@@ -58,7 +58,18 @@ databases:
     endpoint: "<host>:<port>"
     accessKey: "<accessKey>"
     secretKey: "<secretKey>"
+proxy:
+  url_prefix: https://<address>/static/results/
 ```
+
+{% note warning %}
+
+Suggested `proxy.url_prefix` value is based on the following assumptions:
+- Your installation includes `web` component (i.e. you do not explicitly set `web.enabled` to false)
+- `<address>` is a DNS name or IP address pointing to `web`
+- TLS is enabled (use `http://` otherwise)
+
+{% endnote %}
 
 {% note info %}
 
