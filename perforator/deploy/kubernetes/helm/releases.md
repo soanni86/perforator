@@ -22,6 +22,14 @@ Internal changes:
 1: If you are sending patch to GitHub, specify PR. Otherwise (if you are sending patch to internal monorepo), leave unset and then specify Git commit.
 -->
 
+# 0.2.6
+Enhancements:
++ Allow enabling/disabling certain perforator microservices
++ Allow to deploy extra objects
+
+Fixes:
++ Fix storage service declaration
+
 # 0.2.5
 
 Enhancements:
