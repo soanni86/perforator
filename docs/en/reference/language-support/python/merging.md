@@ -23,6 +23,8 @@ A stub frame is a delimiter between the native and Python stacks. This frame is 
 
 The Python user stack is divided into segments each one starting with a stub frame. Also, segments of the native stack with CPython are extracted using `_PyEval_EvalFrameDefault` as a delimiter. The functions starting with the `_Py` or `Py` prefix are considered to be CPython internal implementation.
 
+![Python Stack Merging](../../../../_assets/py-stack-merging.svg)
+
 These stack segments should map one-to-one with each other, but there are some exceptions:
 
 * `_PyEval_EvalFrameDefault` has started executing on top of the native stack but has not finished pushing the stub Python frame yet.

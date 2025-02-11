@@ -2,6 +2,8 @@
 
 Each native thread is mapped to one `PyThreadState` structure which contains information about the corresponding Python thread.
 
+![Python Thread State Mapping](../../../../_assets/py-threadstate-mapping.svg)
+
 Perforator utilizes multiple ways to obtain current `*PyThreadState` in eBPF context - reading from Thread Local Storage (TLS) and extracting from global variables - such as `_PyRuntime` or others. The combination of these approaches and caching helps to improve the accuracy of the `*PyThreadState` collection.
 
 ## Reading `*PyThreadState` from TLS
@@ -11,6 +13,10 @@ In Python 3.12+, a pointer to current thread's `PyThreadState` is stored in a Th
 In an eBPF program, the pointer to userspace thread structure can be retrieved by reading `thread.fsbase` from the `task_struct` structure. This structure can be obtained with the `bpf_get_current_task()` helper. The Thread Local Image will be to the left of the pointer stored in `thread.fsbase`.
 
 The exact offset of thread local variable `_PyThreadState_Current` in Thread Local Image is unknown yet. Therefore, the disassembler is used to find the offset of `_PyThreadState_Current`.
+
+![Thread Local Image](../../../../_assets/py-tls.svg)
+
+### Parsing offset of `_PyThreadState_Current` in Thread Local Image
 
 `_PyThreadState_GetCurrent` is a simple getter function which returns the pointer from `_PyThreadState_Current` thread local variable and looks somewhat like this:
 
@@ -56,6 +62,8 @@ Looking at these functions, the offset relative to `%fs` register which is used 
 Starting from Python 3.7, there is a global state for CPython runtime - `_PyRuntime`. The address of this global variable can be found in the `.dynsym` section. This structure contains the list of Python interpreter states represented by `_PyInterpreterState` structure.
 
 From each `_PyInterpreterState`, the pointer to the head of `*PyThreadState` linked list can be extracted.
+
+![Retrieve thread state from _PyRuntime](../../../../_assets/py-runtime-thread-state.svg)
 
 Each `PyThreadState` structure stores a field `native_thread_id` which can be checked against current TID to find the correct Python thread.
 

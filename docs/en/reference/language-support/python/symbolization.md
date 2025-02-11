@@ -6,6 +6,8 @@ Python symbols are stored in a `BPF_MAP_TYPE_LRU_HASH` map called `python_symbol
 
 `python_symbols` contains function names and filenames for each symbol by ID. The symbol ID is a `(code_object_address, pid, co_firstlineno)` tuple which serves as a unique Python symbol identifier within the system.
 
+![Python Symbols Map](../../../../_assets/py-symbols-cache.svg)
+
 The Python stack is passed as an array of Python symbol IDs to the user space.
 
 ## User space symbolization
