@@ -52,6 +52,14 @@ databases:
       # - name: ...
       #   value: ...
 
+      # Extra volume mounts to add into the migration container.
+      extraMounts: []
+      # - name: perforator-config
+      #   mountPath: /config
+      #   subPath: ""
+      #   configMap: perforator-config
+      #   readOnly: true
+
   clickhouse:
     replicas: []
     #  - "some-endpoint.net:9440"
@@ -94,6 +102,14 @@ databases:
       extraEnv: []
       # - name: ...
       #   value: ...
+
+      # Extra volume mounts to add into the migration container.
+      extraMounts: []
+      # - name: perforator-config
+      #   mountPath: /config
+      #   subPath: ""
+      #   configMap: perforator-config
+      #   readOnly: true
 
   s3:
     buckets:

@@ -47,5 +47,18 @@ spec:
         - name: {{ .name }}
           value: {{ .value }}
         {{- end }}
+        volumeMounts:
+        {{- range .Values.databases.clickhouse.migrations.extraMounts }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
+        {{- end }}
+      volumes:
+      {{- range .Values.databases.clickhouse.migrations.extraMounts }}
+      - name: {{ .name }}
+        configMap:
+          name: {{ .configMap }}
+      {{- end }}
   ttlSecondsAfterFinished: {{ .Values.databases.clickhouse.migrations.ttlSecondsAfterFinished }}
 {{- end}}
