@@ -1,19 +1,44 @@
+<!--
+IMPORTANT: read this when updating release notes.
+
+Here is the format used:
+
+```
+# Version/Unreleased
+
+Fixes:
+
++ Description (PR or commit[1])
+
+Enhancements:
+
++ Description (PR or commit)
+
+Internal changes:
+
++ Description (PR or commit)
+```
+
+1: If you are sending patch to GitHub, specify PR. Otherwise (if you are sending patch to internal monorepo), leave unset and then specify Git commit.
+-->
+
 # Unreleased
 
 Enhancements:
 + Allow customizing environment variables for all components
++ Upgrade perforator to [v0.0.3](https://github.com/yandex/perforator/releases/tag/v0.0.3)
 
 # 0.2.4
 
 Fixes:
-+ Fix mount extra volumes
++ Fix mount extra volumes (#30)
 
 Enhancements:
-+ Add default images for all components
-+ (experimental) Add support for automated migrations (see `.databases.{postgresql,clickhouse}.migrations` for details)
++ Add default images for all components (677ca2b)
++ (experimental) Add support for automated migrations (see `.databases.{postgresql,clickhouse}.migrations` for details) (1d38dff)
 
 Internal changes:
-+ Change auto-generated CA subject
++ Change auto-generated CA subject (75f12f2)
 
 # 0.2.3
 
