@@ -8,11 +8,9 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 
-	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -209,39 +207,6 @@ func run() error {
 					l.Error("Failed to disable debug mode", log.Error(err))
 				}
 			}
-		}
-	}()
-
-	// Dump metrics to stderr every second
-	go func() {
-		var m runtime.MemStats
-		tick := time.NewTicker(time.Second)
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case <-tick.C:
-			}
-			_, _ = r.Stream(ctx, os.Stderr)
-			_, _ = os.Stderr.WriteString("\n")
-
-			runtime.ReadMemStats(&m)
-
-			fmt.Fprintf(os.Stderr, "MEM: Alloc: %s, TotalAlloc: %s, Sys: %s, Mallocs: %d, Frees: %d, HeapIdle: %s, HeapInuse: %s\n",
-				humanize.Bytes(m.Alloc),
-				humanize.Bytes(m.TotalAlloc),
-				humanize.Bytes(m.Sys),
-				m.Mallocs,
-				m.Frees,
-				humanize.Bytes(m.HeapIdle),
-				humanize.Bytes(m.HeapInuse),
-			)
-			fmt.Fprintf(os.Stderr, "GC: Num GC: %v, Next GC: %v, Last GC: %v, CPU fraction: %v\n",
-				m.NumGC,
-				humanize.Bytes(m.NextGC),
-				time.Since(time.UnixMicro(int64(m.LastGC/1000))),
-				m.GCCPUFraction,
-			)
 		}
 	}()
 
