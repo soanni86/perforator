@@ -22,7 +22,7 @@ Internal changes:
 1: If you are sending patch to GitHub, specify PR. Otherwise (if you are sending patch to internal monorepo), leave unset and then specify Git commit.
 -->
 
-# Unreleased
+# 0.2.5
 
 Enhancements:
 + Allow customizing environment variables for all components
