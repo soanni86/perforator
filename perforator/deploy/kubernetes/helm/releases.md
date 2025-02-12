@@ -29,6 +29,7 @@ Enhancements:
 
 Fixes:
 + Fix storage service declaration
++ Fix priority class setting placement
 
 # 0.2.5
 
