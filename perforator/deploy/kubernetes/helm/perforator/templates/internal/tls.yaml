@@ -1,14 +1,13 @@
 {{- $ca := genCA (printf "%s-storage-service-ca" (include "perforator.fullname" .)) 3650 }}
-{{- $storageCert := dict }}
-{{- if .Values.storage.hostname }}
-{{- $hostname := toString .Values.storage.hostname }}
+{{- $hostname := .Values.storage.hostname }}
+{{- if $hostname }}
 {{- if contains ":" $hostname }}
   {{- $hostname = index (regexSplit ":" $hostname -1) 0 }}
 {{- end }}
-{{- $storageCert = genSignedCert $hostname  nil (list $hostname) 3650 $ca }}
 {{- else }}
-{{- $storageCert = genSignedCert (printf "%s-storage-service" (include "perforator.fullname" .)) nil (list (printf "%s-storage-service" (include "perforator.fullname" .))) 3650 $ca }}
+{{- $hostname = (printf "%s-storage-service" (include "perforator.fullname" .)) }}
 {{- end }}
+{{- $storageCert = genSignedCert $hostname nil (list $hostname) 3650 $ca }}
 {{- $storageSecretName := printf "%s-storage-crt" (include "perforator.fullname" .) }}
 apiVersion: v1
 data:
