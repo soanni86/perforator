@@ -25,7 +25,6 @@ RECURSE(
     spanner
     sqlite
     sqlite3
-    sqlserver
     stub
     testing
 )
