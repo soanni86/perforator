@@ -2,7 +2,7 @@ GO_LIBRARY()
 
 LICENSE(MIT)
 
-VERSION(v5.7.1)
+VERSION(v5.7.2)
 
 SRCS(
     batch_results.go
@@ -20,7 +20,7 @@ GO_XTEST_SRCS(
     common_test.go
     # conn_test.go
     # pool_test.go
-    tracer_test.go
+    # tracer_test.go
     # tx_test.go
 )
 

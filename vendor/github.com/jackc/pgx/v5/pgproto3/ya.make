@@ -2,7 +2,7 @@ GO_LIBRARY()
 
 LICENSE(MIT)
 
-VERSION(v5.7.1)
+VERSION(v5.7.2)
 
 SRCS(
     authentication_cleartext_password.go
