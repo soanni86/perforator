@@ -11,6 +11,7 @@ const (
 	Regex
 	Exists
 	Glob
+	ISubstring
 )
 
 func (op Operator) IsOrderingOperator() bool {
@@ -51,6 +52,11 @@ func Repr(op Operator, inverse bool) string {
 			return "!="
 		}
 		return "="
+	case ISubstring:
+		if inverse {
+			return "!isubstring"
+		}
+		return "isubstring"
 	default:
 		return "unknown_operator"
 	}
@@ -74,6 +80,8 @@ func (op Operator) String() string {
 		return "Exists"
 	case Glob:
 		return "Glob"
+	case ISubstring:
+		return "ISubstring"
 	default:
 		return "Unknown"
 	}

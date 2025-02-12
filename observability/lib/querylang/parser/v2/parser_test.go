@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/yandex/perforator/observability/lib/querylang/parser/v2"
+	parserv2 "github.com/yandex/perforator/observability/lib/querylang/parser/v2"
 )
 
 type testCase struct {
@@ -88,6 +88,14 @@ func TestParser(t *testing.T) {
 		{
 			Query:        `{x != "a|*|-"}`,
 			ExpectedRepr: `"x" != "a" AND "x" !exists AND "x" exists`,
+		},
+		{
+			Query:        `{x =* "a|b"}`,
+			ExpectedRepr: `("x" isubstring "a" OR "x" isubstring "b")`,
+		},
+		{
+			Query:        `{x !=* "a|b"}`,
+			ExpectedRepr: `"x" !isubstring "a" AND "x" !isubstring "b"`,
 		},
 		{
 			Query:        `{}`,

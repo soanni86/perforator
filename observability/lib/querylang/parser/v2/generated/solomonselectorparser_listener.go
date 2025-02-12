@@ -1,9 +1,8 @@
-// Code generated from solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ../../../solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // SolomonSelectorParser
 
 import "github.com/antlr4-go/antlr/v4"
-
 
 // SolomonSelectorParserListener is a complete listener for a parse tree produced by SolomonSelectorParser.
 type SolomonSelectorParserListener interface {

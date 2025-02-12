@@ -1,4 +1,4 @@
-// Code generated from solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ../../../solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // SolomonSelectorParser
 
@@ -58,10 +58,12 @@ func (s *BaseSolomonSelectorParserListener) EnterSelectorOpDuration(ctx *Selecto
 func (s *BaseSolomonSelectorParserListener) ExitSelectorOpDuration(ctx *SelectorOpDurationContext) {}
 
 // EnterSelectorLeftOperand is called when production selectorLeftOperand is entered.
-func (s *BaseSolomonSelectorParserListener) EnterSelectorLeftOperand(ctx *SelectorLeftOperandContext) {}
+func (s *BaseSolomonSelectorParserListener) EnterSelectorLeftOperand(ctx *SelectorLeftOperandContext) {
+}
 
 // ExitSelectorLeftOperand is called when production selectorLeftOperand is exited.
-func (s *BaseSolomonSelectorParserListener) ExitSelectorLeftOperand(ctx *SelectorLeftOperandContext) {}
+func (s *BaseSolomonSelectorParserListener) ExitSelectorLeftOperand(ctx *SelectorLeftOperandContext) {
+}
 
 // EnterNumberUnary is called when production numberUnary is entered.
 func (s *BaseSolomonSelectorParserListener) EnterNumberUnary(ctx *NumberUnaryContext) {}
