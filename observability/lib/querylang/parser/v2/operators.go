@@ -28,6 +28,8 @@ type stringOperator interface {
 	numericOperator
 	REGEX() antlr.TerminalNode
 	NOT_REGEX() antlr.TerminalNode
+	ISUBSTRING() antlr.TerminalNode
+	NOT_ISUBSTRING() antlr.TerminalNode
 }
 
 type durationOperator interface {
@@ -82,6 +84,11 @@ func convertStringOperator(op stringOperator) (result operatorCond, err error) {
 		result.operator = operator.Regex
 	case op.NOT_REGEX() != nil:
 		result.operator = operator.Regex
+		result.inverse = true
+	case op.ISUBSTRING() != nil:
+		result.operator = operator.ISubstring
+	case op.NOT_ISUBSTRING() != nil:
+		result.operator = operator.ISubstring
 		result.inverse = true
 	default:
 		return convertNumericOperator(op)

@@ -876,3 +876,10 @@ offlineprocessing:
   dnsPolicy: ClusterFirst
   # priorityClassName to apply to perforator offlineprocessing pods.
   priorityClassName: ""
+
+testing:
+  # Deployes postgresql, clickhouse, minio subcharts with "perforator" user and "perforator" password. 
+  # It also creates "perforator" database in case of postgresql, clickhouse, and in case of minio 
+  # perforator-profile, perforator-binary, perforator-task-results, perforator-binary-gsym buckets.
+  # If this setting is enabled, you don't need to fill corresponding .Values.databases hosts.
+  enableTestingDatabases: false

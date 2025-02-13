@@ -1,11 +1,16 @@
 apiVersion: v2
 name: perforator
 description: Perforator cluster-wide continuous profiling system (https://github.com/yandex/perforator)
+dependencies:
+- condition: testing.enableTestingDatabases
+  name: perforator-dev
+  alias: testing
+  version: 0.x.x
 
 type: application
 
 # See releases.md for changelog
-version: 0.2.6
+version: 0.2.5
 
 # Perforator version installed by default.
 # It can be overriden via Helm values.

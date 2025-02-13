@@ -1,11 +1,11 @@
-// Code generated from solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ../../../solomon/libs/java/solomon-grammar/SolomonSelectorParser.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // SolomonSelectorParser
 
 import (
 	"fmt"
 	"strconv"
-  	"sync"
+	"sync"
 
 	"github.com/antlr4-go/antlr/v4"
 )
@@ -15,83 +15,82 @@ var _ = fmt.Printf
 var _ = strconv.Itoa
 var _ = sync.Once{}
 
-
 type SolomonSelectorParser struct {
 	*antlr.BaseParser
 }
 
 var SolomonSelectorParserParserStaticData struct {
-  once                   sync.Once
-  serializedATN          []int32
-  LiteralNames           []string
-  SymbolicNames          []string
-  RuleNames              []string
-  PredictionContextCache *antlr.PredictionContextCache
-  atn                    *antlr.ATN
-  decisionToDFA          []*antlr.DFA
+	once                   sync.Once
+	serializedATN          []int32
+	LiteralNames           []string
+	SymbolicNames          []string
+	RuleNames              []string
+	PredictionContextCache *antlr.PredictionContextCache
+	atn                    *antlr.ATN
+	decisionToDFA          []*antlr.DFA
 }
 
 func solomonselectorparserParserInit() {
-  staticData := &SolomonSelectorParserParserStaticData
-  staticData.LiteralNames = []string{
-    "", "'let'", "'by'", "'return'", "'{'", "'}'", "'('", "','", "')'", 
-    "'['", "']'", "'->'", "'+'", "'-'", "'/'", "'*'", "'!'", "'&&'", "'||'", 
-    "'<'", "'>'", "'<='", "'>='", "'=='", "'!='", "'!=='", "'=~'", "'!~'", 
-    "'?'", "':'", "'='", "';'",
-  }
-  staticData.SymbolicNames = []string{
-    "", "KW_LET", "KW_BY", "KW_RETURN", "OPENING_BRACE", "CLOSING_BRACE", 
-    "OPENING_PAREN", "COMMA", "CLOSING_PAREN", "OPENING_BRACKET", "CLOSING_BRACKET", 
-    "ARROW", "PLUS", "MINUS", "DIV", "MUL", "NOT", "AND", "OR", "LT", "GT", 
-    "LE", "GE", "EQ", "NE", "NOT_EQUIV", "REGEX", "NOT_REGEX", "QUESTION", 
-    "COLON", "ASSIGNMENT", "SEMICOLON", "IDENT_WITH_DOTS", "IDENT", "DURATION", 
-    "NUMBER", "STRING", "WS", "COMMENTS",
-  }
-  staticData.RuleNames = []string{
-    "selectors", "selectorList", "selector", "selectorOpString", "selectorOpNumber", 
-    "selectorOpDuration", "selectorLeftOperand", "numberUnary", "labelAbsent", 
-    "identOrString",
-  }
-  staticData.PredictionContextCache = antlr.NewPredictionContextCache()
-  staticData.serializedATN = []int32{
-	4, 1, 38, 74, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7, 
-	4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 1, 0, 1, 
-	0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 27, 8, 0, 1, 1, 1, 1, 1, 1, 5, 1, 32, 
-	8, 1, 10, 1, 12, 1, 35, 9, 1, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 41, 8, 2, 1, 
-	2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 
-	2, 55, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 5, 1, 5, 1, 6, 1, 6, 1, 7, 3, 7, 
-	66, 8, 7, 1, 7, 1, 7, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 0, 0, 10, 0, 2, 4, 
-	6, 8, 10, 12, 14, 16, 18, 0, 6, 2, 0, 19, 27, 30, 30, 2, 0, 19, 25, 30, 
-	30, 1, 0, 19, 22, 2, 0, 32, 33, 36, 36, 1, 0, 12, 13, 2, 0, 33, 33, 36, 
-	36, 70, 0, 26, 1, 0, 0, 0, 2, 28, 1, 0, 0, 0, 4, 54, 1, 0, 0, 0, 6, 56, 
-	1, 0, 0, 0, 8, 58, 1, 0, 0, 0, 10, 60, 1, 0, 0, 0, 12, 62, 1, 0, 0, 0, 
-	14, 65, 1, 0, 0, 0, 16, 69, 1, 0, 0, 0, 18, 71, 1, 0, 0, 0, 20, 21, 5, 
-	4, 0, 0, 21, 22, 3, 2, 1, 0, 22, 23, 5, 5, 0, 0, 23, 27, 1, 0, 0, 0, 24, 
-	25, 5, 4, 0, 0, 25, 27, 5, 5, 0, 0, 26, 20, 1, 0, 0, 0, 26, 24, 1, 0, 0, 
-	0, 27, 1, 1, 0, 0, 0, 28, 33, 3, 4, 2, 0, 29, 30, 5, 7, 0, 0, 30, 32, 3, 
-	4, 2, 0, 31, 29, 1, 0, 0, 0, 32, 35, 1, 0, 0, 0, 33, 31, 1, 0, 0, 0, 33, 
-	34, 1, 0, 0, 0, 34, 3, 1, 0, 0, 0, 35, 33, 1, 0, 0, 0, 36, 37, 3, 12, 6, 
-	0, 37, 40, 3, 6, 3, 0, 38, 41, 5, 32, 0, 0, 39, 41, 3, 18, 9, 0, 40, 38, 
-	1, 0, 0, 0, 40, 39, 1, 0, 0, 0, 41, 55, 1, 0, 0, 0, 42, 43, 3, 12, 6, 0, 
-	43, 44, 3, 8, 4, 0, 44, 45, 3, 14, 7, 0, 45, 55, 1, 0, 0, 0, 46, 47, 3, 
-	12, 6, 0, 47, 48, 3, 10, 5, 0, 48, 49, 5, 34, 0, 0, 49, 55, 1, 0, 0, 0, 
-	50, 51, 3, 12, 6, 0, 51, 52, 5, 30, 0, 0, 52, 53, 3, 16, 8, 0, 53, 55, 
-	1, 0, 0, 0, 54, 36, 1, 0, 0, 0, 54, 42, 1, 0, 0, 0, 54, 46, 1, 0, 0, 0, 
-	54, 50, 1, 0, 0, 0, 55, 5, 1, 0, 0, 0, 56, 57, 7, 0, 0, 0, 57, 7, 1, 0, 
-	0, 0, 58, 59, 7, 1, 0, 0, 59, 9, 1, 0, 0, 0, 60, 61, 7, 2, 0, 0, 61, 11, 
-	1, 0, 0, 0, 62, 63, 7, 3, 0, 0, 63, 13, 1, 0, 0, 0, 64, 66, 7, 4, 0, 0, 
-	65, 64, 1, 0, 0, 0, 65, 66, 1, 0, 0, 0, 66, 67, 1, 0, 0, 0, 67, 68, 5, 
-	35, 0, 0, 68, 15, 1, 0, 0, 0, 69, 70, 5, 13, 0, 0, 70, 17, 1, 0, 0, 0, 
-	71, 72, 7, 5, 0, 0, 72, 19, 1, 0, 0, 0, 5, 26, 33, 40, 54, 65,
-}
-  deserializer := antlr.NewATNDeserializer(nil)
-  staticData.atn = deserializer.Deserialize(staticData.serializedATN)
-  atn := staticData.atn
-  staticData.decisionToDFA = make([]*antlr.DFA, len(atn.DecisionToState))
-  decisionToDFA := staticData.decisionToDFA
-  for index, state := range atn.DecisionToState {
-    decisionToDFA[index] = antlr.NewDFA(state, index)
-  }
+	staticData := &SolomonSelectorParserParserStaticData
+	staticData.LiteralNames = []string{
+		"", "'let'", "'by'", "'return'", "'{'", "'}'", "'('", "','", "')'",
+		"'['", "']'", "'->'", "'+'", "'-'", "'/'", "'*'", "'!'", "'&&'", "'||'",
+		"'<'", "'>'", "'<='", "'>='", "'=='", "'!='", "'!=='", "'=~'", "'!~'",
+		"'=*'", "'!=*'", "'?'", "':'", "'='", "';'",
+	}
+	staticData.SymbolicNames = []string{
+		"", "KW_LET", "KW_BY", "KW_RETURN", "OPENING_BRACE", "CLOSING_BRACE",
+		"OPENING_PAREN", "COMMA", "CLOSING_PAREN", "OPENING_BRACKET", "CLOSING_BRACKET",
+		"ARROW", "PLUS", "MINUS", "DIV", "MUL", "NOT", "AND", "OR", "LT", "GT",
+		"LE", "GE", "EQ", "NE", "NOT_EQUIV", "REGEX", "NOT_REGEX", "ISUBSTRING",
+		"NOT_ISUBSTRING", "QUESTION", "COLON", "ASSIGNMENT", "SEMICOLON", "IDENT_WITH_DOTS",
+		"IDENT", "DURATION", "NUMBER", "STRING", "WS", "COMMENTS",
+	}
+	staticData.RuleNames = []string{
+		"selectors", "selectorList", "selector", "selectorOpString", "selectorOpNumber",
+		"selectorOpDuration", "selectorLeftOperand", "numberUnary", "labelAbsent",
+		"identOrString",
+	}
+	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
+	staticData.serializedATN = []int32{
+		4, 1, 40, 74, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 1, 0, 1,
+		0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 27, 8, 0, 1, 1, 1, 1, 1, 1, 5, 1, 32,
+		8, 1, 10, 1, 12, 1, 35, 9, 1, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 41, 8, 2, 1,
+		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3,
+		2, 55, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 5, 1, 5, 1, 6, 1, 6, 1, 7, 3, 7,
+		66, 8, 7, 1, 7, 1, 7, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 0, 0, 10, 0, 2, 4,
+		6, 8, 10, 12, 14, 16, 18, 0, 6, 2, 0, 19, 29, 32, 32, 2, 0, 19, 25, 32,
+		32, 1, 0, 19, 22, 2, 0, 34, 35, 38, 38, 1, 0, 12, 13, 2, 0, 35, 35, 38,
+		38, 70, 0, 26, 1, 0, 0, 0, 2, 28, 1, 0, 0, 0, 4, 54, 1, 0, 0, 0, 6, 56,
+		1, 0, 0, 0, 8, 58, 1, 0, 0, 0, 10, 60, 1, 0, 0, 0, 12, 62, 1, 0, 0, 0,
+		14, 65, 1, 0, 0, 0, 16, 69, 1, 0, 0, 0, 18, 71, 1, 0, 0, 0, 20, 21, 5,
+		4, 0, 0, 21, 22, 3, 2, 1, 0, 22, 23, 5, 5, 0, 0, 23, 27, 1, 0, 0, 0, 24,
+		25, 5, 4, 0, 0, 25, 27, 5, 5, 0, 0, 26, 20, 1, 0, 0, 0, 26, 24, 1, 0, 0,
+		0, 27, 1, 1, 0, 0, 0, 28, 33, 3, 4, 2, 0, 29, 30, 5, 7, 0, 0, 30, 32, 3,
+		4, 2, 0, 31, 29, 1, 0, 0, 0, 32, 35, 1, 0, 0, 0, 33, 31, 1, 0, 0, 0, 33,
+		34, 1, 0, 0, 0, 34, 3, 1, 0, 0, 0, 35, 33, 1, 0, 0, 0, 36, 37, 3, 12, 6,
+		0, 37, 40, 3, 6, 3, 0, 38, 41, 5, 34, 0, 0, 39, 41, 3, 18, 9, 0, 40, 38,
+		1, 0, 0, 0, 40, 39, 1, 0, 0, 0, 41, 55, 1, 0, 0, 0, 42, 43, 3, 12, 6, 0,
+		43, 44, 3, 8, 4, 0, 44, 45, 3, 14, 7, 0, 45, 55, 1, 0, 0, 0, 46, 47, 3,
+		12, 6, 0, 47, 48, 3, 10, 5, 0, 48, 49, 5, 36, 0, 0, 49, 55, 1, 0, 0, 0,
+		50, 51, 3, 12, 6, 0, 51, 52, 5, 32, 0, 0, 52, 53, 3, 16, 8, 0, 53, 55,
+		1, 0, 0, 0, 54, 36, 1, 0, 0, 0, 54, 42, 1, 0, 0, 0, 54, 46, 1, 0, 0, 0,
+		54, 50, 1, 0, 0, 0, 55, 5, 1, 0, 0, 0, 56, 57, 7, 0, 0, 0, 57, 7, 1, 0,
+		0, 0, 58, 59, 7, 1, 0, 0, 59, 9, 1, 0, 0, 0, 60, 61, 7, 2, 0, 0, 61, 11,
+		1, 0, 0, 0, 62, 63, 7, 3, 0, 0, 63, 13, 1, 0, 0, 0, 64, 66, 7, 4, 0, 0,
+		65, 64, 1, 0, 0, 0, 65, 66, 1, 0, 0, 0, 66, 67, 1, 0, 0, 0, 67, 68, 5,
+		37, 0, 0, 68, 15, 1, 0, 0, 0, 69, 70, 5, 13, 0, 0, 70, 17, 1, 0, 0, 0,
+		71, 72, 7, 5, 0, 0, 72, 19, 1, 0, 0, 0, 5, 26, 33, 40, 54, 65,
+	}
+	deserializer := antlr.NewATNDeserializer(nil)
+	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
+	atn := staticData.atn
+	staticData.decisionToDFA = make([]*antlr.DFA, len(atn.DecisionToState))
+	decisionToDFA := staticData.decisionToDFA
+	for index, state := range atn.DecisionToState {
+		decisionToDFA[index] = antlr.NewDFA(state, index)
+	}
 }
 
 // SolomonSelectorParserInit initializes any static state used to implement SolomonSelectorParser. By default the
@@ -99,8 +98,8 @@ func solomonselectorparserParserInit() {
 // NewSolomonSelectorParser(). You can call this function if you wish to initialize the static state ahead
 // of time.
 func SolomonSelectorParserInit() {
-  staticData := &SolomonSelectorParserParserStaticData
-  staticData.once.Do(solomonselectorparserParserInit)
+	staticData := &SolomonSelectorParserParserStaticData
+	staticData.once.Do(solomonselectorparserParserInit)
 }
 
 // NewSolomonSelectorParser produces a new parser instance for the optional input antlr.TokenStream.
@@ -108,7 +107,7 @@ func NewSolomonSelectorParser(input antlr.TokenStream) *SolomonSelectorParser {
 	SolomonSelectorParserInit()
 	this := new(SolomonSelectorParser)
 	this.BaseParser = antlr.NewBaseParser(input)
-  staticData := &SolomonSelectorParserParserStaticData
+	staticData := &SolomonSelectorParserParserStaticData
 	this.Interpreter = antlr.NewParserATNSimulator(this, staticData.atn, staticData.decisionToDFA, staticData.PredictionContextCache)
 	this.RuleNames = staticData.RuleNames
 	this.LiteralNames = staticData.LiteralNames
@@ -118,62 +117,63 @@ func NewSolomonSelectorParser(input antlr.TokenStream) *SolomonSelectorParser {
 	return this
 }
 
-
 // SolomonSelectorParser tokens.
 const (
-	SolomonSelectorParserEOF = antlr.TokenEOF
-	SolomonSelectorParserKW_LET = 1
-	SolomonSelectorParserKW_BY = 2
-	SolomonSelectorParserKW_RETURN = 3
-	SolomonSelectorParserOPENING_BRACE = 4
-	SolomonSelectorParserCLOSING_BRACE = 5
-	SolomonSelectorParserOPENING_PAREN = 6
-	SolomonSelectorParserCOMMA = 7
-	SolomonSelectorParserCLOSING_PAREN = 8
+	SolomonSelectorParserEOF             = antlr.TokenEOF
+	SolomonSelectorParserKW_LET          = 1
+	SolomonSelectorParserKW_BY           = 2
+	SolomonSelectorParserKW_RETURN       = 3
+	SolomonSelectorParserOPENING_BRACE   = 4
+	SolomonSelectorParserCLOSING_BRACE   = 5
+	SolomonSelectorParserOPENING_PAREN   = 6
+	SolomonSelectorParserCOMMA           = 7
+	SolomonSelectorParserCLOSING_PAREN   = 8
 	SolomonSelectorParserOPENING_BRACKET = 9
 	SolomonSelectorParserCLOSING_BRACKET = 10
-	SolomonSelectorParserARROW = 11
-	SolomonSelectorParserPLUS = 12
-	SolomonSelectorParserMINUS = 13
-	SolomonSelectorParserDIV = 14
-	SolomonSelectorParserMUL = 15
-	SolomonSelectorParserNOT = 16
-	SolomonSelectorParserAND = 17
-	SolomonSelectorParserOR = 18
-	SolomonSelectorParserLT = 19
-	SolomonSelectorParserGT = 20
-	SolomonSelectorParserLE = 21
-	SolomonSelectorParserGE = 22
-	SolomonSelectorParserEQ = 23
-	SolomonSelectorParserNE = 24
-	SolomonSelectorParserNOT_EQUIV = 25
-	SolomonSelectorParserREGEX = 26
-	SolomonSelectorParserNOT_REGEX = 27
-	SolomonSelectorParserQUESTION = 28
-	SolomonSelectorParserCOLON = 29
-	SolomonSelectorParserASSIGNMENT = 30
-	SolomonSelectorParserSEMICOLON = 31
-	SolomonSelectorParserIDENT_WITH_DOTS = 32
-	SolomonSelectorParserIDENT = 33
-	SolomonSelectorParserDURATION = 34
-	SolomonSelectorParserNUMBER = 35
-	SolomonSelectorParserSTRING = 36
-	SolomonSelectorParserWS = 37
-	SolomonSelectorParserCOMMENTS = 38
+	SolomonSelectorParserARROW           = 11
+	SolomonSelectorParserPLUS            = 12
+	SolomonSelectorParserMINUS           = 13
+	SolomonSelectorParserDIV             = 14
+	SolomonSelectorParserMUL             = 15
+	SolomonSelectorParserNOT             = 16
+	SolomonSelectorParserAND             = 17
+	SolomonSelectorParserOR              = 18
+	SolomonSelectorParserLT              = 19
+	SolomonSelectorParserGT              = 20
+	SolomonSelectorParserLE              = 21
+	SolomonSelectorParserGE              = 22
+	SolomonSelectorParserEQ              = 23
+	SolomonSelectorParserNE              = 24
+	SolomonSelectorParserNOT_EQUIV       = 25
+	SolomonSelectorParserREGEX           = 26
+	SolomonSelectorParserNOT_REGEX       = 27
+	SolomonSelectorParserISUBSTRING      = 28
+	SolomonSelectorParserNOT_ISUBSTRING  = 29
+	SolomonSelectorParserQUESTION        = 30
+	SolomonSelectorParserCOLON           = 31
+	SolomonSelectorParserASSIGNMENT      = 32
+	SolomonSelectorParserSEMICOLON       = 33
+	SolomonSelectorParserIDENT_WITH_DOTS = 34
+	SolomonSelectorParserIDENT           = 35
+	SolomonSelectorParserDURATION        = 36
+	SolomonSelectorParserNUMBER          = 37
+	SolomonSelectorParserSTRING          = 38
+	SolomonSelectorParserWS              = 39
+	SolomonSelectorParserCOMMENTS        = 40
 )
 
 // SolomonSelectorParser rules.
 const (
-	SolomonSelectorParserRULE_selectors = 0
-	SolomonSelectorParserRULE_selectorList = 1
-	SolomonSelectorParserRULE_selector = 2
-	SolomonSelectorParserRULE_selectorOpString = 3
-	SolomonSelectorParserRULE_selectorOpNumber = 4
-	SolomonSelectorParserRULE_selectorOpDuration = 5
+	SolomonSelectorParserRULE_selectors           = 0
+	SolomonSelectorParserRULE_selectorList        = 1
+	SolomonSelectorParserRULE_selector            = 2
+	SolomonSelectorParserRULE_selectorOpString    = 3
+	SolomonSelectorParserRULE_selectorOpNumber    = 4
+	SolomonSelectorParserRULE_selectorOpDuration  = 5
 	SolomonSelectorParserRULE_selectorLeftOperand = 6
-	SolomonSelectorParserRULE_numberUnary = 7
-	SolomonSelectorParserRULE_labelAbsent = 8
-	SolomonSelectorParserRULE_identOrString = 9
+	SolomonSelectorParserRULE_numberUnary         = 7
+	SolomonSelectorParserRULE_labelAbsent         = 8
+	SolomonSelectorParserRULE_identOrString       = 9
 )
 
 // ISelectorsContext is an interface to support dynamic dispatch.
@@ -204,7 +204,7 @@ func NewEmptySelectorsContext() *SelectorsContext {
 	return p
 }
 
-func InitEmptySelectorsContext(p *SelectorsContext)  {
+func InitEmptySelectorsContext(p *SelectorsContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectors
 }
@@ -229,10 +229,10 @@ func (s *SelectorsContext) OPENING_BRACE() antlr.TerminalNode {
 }
 
 func (s *SelectorsContext) SelectorList() ISelectorListContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorListContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -256,7 +256,6 @@ func (s *SelectorsContext) ToStringTree(ruleNames []string, recog antlr.Recogniz
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorsContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectors(s)
@@ -268,9 +267,6 @@ func (s *SelectorsContext) ExitRule(listener antlr.ParseTreeListener) {
 		listenerT.ExitSelectors(s)
 	}
 }
-
-
-
 
 func (p *SolomonSelectorParser) Selectors() (localctx ISelectorsContext) {
 	localctx = NewSelectorsContext(p, p.GetParserRuleContext(), p.GetState())
@@ -288,8 +284,8 @@ func (p *SolomonSelectorParser) Selectors() (localctx ISelectorsContext) {
 			p.SetState(20)
 			p.Match(SolomonSelectorParserOPENING_BRACE)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
 		{
@@ -300,11 +296,10 @@ func (p *SolomonSelectorParser) Selectors() (localctx ISelectorsContext) {
 			p.SetState(22)
 			p.Match(SolomonSelectorParserCLOSING_BRACE)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
-
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
@@ -312,23 +307,22 @@ func (p *SolomonSelectorParser) Selectors() (localctx ISelectorsContext) {
 			p.SetState(24)
 			p.Match(SolomonSelectorParserOPENING_BRACE)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
 		{
 			p.SetState(25)
 			p.Match(SolomonSelectorParserCLOSING_BRACE)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
 
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit
 	}
-
 
 errorExit:
 	if p.HasError() {
@@ -342,7 +336,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorListContext is an interface to support dynamic dispatch.
 type ISelectorListContext interface {
@@ -373,7 +366,7 @@ func NewEmptySelectorListContext() *SelectorListContext {
 	return p
 }
 
-func InitEmptySelectorListContext(p *SelectorListContext)  {
+func InitEmptySelectorListContext(p *SelectorListContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectorList
 }
@@ -415,12 +408,12 @@ func (s *SelectorListContext) AllSelector() []ISelectorContext {
 }
 
 func (s *SelectorListContext) Selector(i int) ISelectorContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorContext); ok {
 			if j == i {
-				t = ctx.(antlr.RuleContext);
+				t = ctx.(antlr.RuleContext)
 				break
 			}
 			j++
@@ -450,7 +443,6 @@ func (s *SelectorListContext) ToStringTree(ruleNames []string, recog antlr.Recog
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorListContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectorList(s)
@@ -462,9 +454,6 @@ func (s *SelectorListContext) ExitRule(listener antlr.ParseTreeListener) {
 		listenerT.ExitSelectorList(s)
 	}
 }
-
-
-
 
 func (p *SolomonSelectorParser) SelectorList() (localctx ISelectorListContext) {
 	localctx = NewSelectorListContext(p, p.GetParserRuleContext(), p.GetState())
@@ -483,14 +472,13 @@ func (p *SolomonSelectorParser) SelectorList() (localctx ISelectorListContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-
 	for _la == SolomonSelectorParserCOMMA {
 		{
 			p.SetState(29)
 			p.Match(SolomonSelectorParserCOMMA)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
 		{
@@ -498,16 +486,13 @@ func (p *SolomonSelectorParser) SelectorList() (localctx ISelectorListContext) {
 			p.Selector()
 		}
 
-
 		p.SetState(35)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
-	    	goto errorExit
-	    }
+			goto errorExit
+		}
 		_la = p.GetTokenStream().LA(1)
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -521,7 +506,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorContext is an interface to support dynamic dispatch.
 type ISelectorContext interface {
@@ -558,7 +542,7 @@ func NewEmptySelectorContext() *SelectorContext {
 	return p
 }
 
-func InitEmptySelectorContext(p *SelectorContext)  {
+func InitEmptySelectorContext(p *SelectorContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selector
 }
@@ -579,10 +563,10 @@ func NewSelectorContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 func (s *SelectorContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *SelectorContext) SelectorLeftOperand() ISelectorLeftOperandContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorLeftOperandContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -595,10 +579,10 @@ func (s *SelectorContext) SelectorLeftOperand() ISelectorLeftOperandContext {
 }
 
 func (s *SelectorContext) SelectorOpString() ISelectorOpStringContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorOpStringContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -615,10 +599,10 @@ func (s *SelectorContext) IDENT_WITH_DOTS() antlr.TerminalNode {
 }
 
 func (s *SelectorContext) IdentOrString() IIdentOrStringContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IIdentOrStringContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -631,10 +615,10 @@ func (s *SelectorContext) IdentOrString() IIdentOrStringContext {
 }
 
 func (s *SelectorContext) SelectorOpNumber() ISelectorOpNumberContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorOpNumberContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -647,10 +631,10 @@ func (s *SelectorContext) SelectorOpNumber() ISelectorOpNumberContext {
 }
 
 func (s *SelectorContext) NumberUnary() INumberUnaryContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(INumberUnaryContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -663,10 +647,10 @@ func (s *SelectorContext) NumberUnary() INumberUnaryContext {
 }
 
 func (s *SelectorContext) SelectorOpDuration() ISelectorOpDurationContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISelectorOpDurationContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -687,10 +671,10 @@ func (s *SelectorContext) ASSIGNMENT() antlr.TerminalNode {
 }
 
 func (s *SelectorContext) LabelAbsent() ILabelAbsentContext {
-	var t antlr.RuleContext;
+	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ILabelAbsentContext); ok {
-			t = ctx.(antlr.RuleContext);
+			t = ctx.(antlr.RuleContext)
 			break
 		}
 	}
@@ -710,7 +694,6 @@ func (s *SelectorContext) ToStringTree(ruleNames []string, recog antlr.Recognize
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelector(s)
@@ -722,9 +705,6 @@ func (s *SelectorContext) ExitRule(listener antlr.ParseTreeListener) {
 		listenerT.ExitSelector(s)
 	}
 }
-
-
-
 
 func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 	localctx = NewSelectorContext(p, p.GetParserRuleContext(), p.GetState())
@@ -758,11 +738,10 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 				p.SetState(38)
 				p.Match(SolomonSelectorParserIDENT_WITH_DOTS)
 				if p.HasError() {
-						// Recognition error - abort rule
-						goto errorExit
+					// Recognition error - abort rule
+					goto errorExit
 				}
 			}
-
 
 		case SolomonSelectorParserIDENT, SolomonSelectorParserSTRING:
 			{
@@ -770,13 +749,10 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 				p.IdentOrString()
 			}
 
-
-
 		default:
 			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 			goto errorExit
 		}
-
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
@@ -793,7 +769,6 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 			p.NumberUnary()
 		}
 
-
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
@@ -808,11 +783,10 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 			p.SetState(48)
 			p.Match(SolomonSelectorParserDURATION)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
-
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
@@ -824,8 +798,8 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 			p.SetState(51)
 			p.Match(SolomonSelectorParserASSIGNMENT)
 			if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
+				// Recognition error - abort rule
+				goto errorExit
 			}
 		}
 		{
@@ -836,7 +810,6 @@ func (p *SolomonSelectorParser) Selector() (localctx ISelectorContext) {
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit
 	}
-
 
 errorExit:
 	if p.HasError() {
@@ -850,7 +823,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorOpStringContext is an interface to support dynamic dispatch.
 type ISelectorOpStringContext interface {
@@ -866,6 +838,8 @@ type ISelectorOpStringContext interface {
 	NOT_EQUIV() antlr.TerminalNode
 	REGEX() antlr.TerminalNode
 	NOT_REGEX() antlr.TerminalNode
+	ISUBSTRING() antlr.TerminalNode
+	NOT_ISUBSTRING() antlr.TerminalNode
 	GT() antlr.TerminalNode
 	LT() antlr.TerminalNode
 	GE() antlr.TerminalNode
@@ -887,7 +861,7 @@ func NewEmptySelectorOpStringContext() *SelectorOpStringContext {
 	return p
 }
 
-func InitEmptySelectorOpStringContext(p *SelectorOpStringContext)  {
+func InitEmptySelectorOpStringContext(p *SelectorOpStringContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectorOpString
 }
@@ -931,6 +905,14 @@ func (s *SelectorOpStringContext) NOT_REGEX() antlr.TerminalNode {
 	return s.GetToken(SolomonSelectorParserNOT_REGEX, 0)
 }
 
+func (s *SelectorOpStringContext) ISUBSTRING() antlr.TerminalNode {
+	return s.GetToken(SolomonSelectorParserISUBSTRING, 0)
+}
+
+func (s *SelectorOpStringContext) NOT_ISUBSTRING() antlr.TerminalNode {
+	return s.GetToken(SolomonSelectorParserNOT_ISUBSTRING, 0)
+}
+
 func (s *SelectorOpStringContext) GT() antlr.TerminalNode {
 	return s.GetToken(SolomonSelectorParserGT, 0)
 }
@@ -955,7 +937,6 @@ func (s *SelectorOpStringContext) ToStringTree(ruleNames []string, recog antlr.R
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorOpStringContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectorOpString(s)
@@ -968,9 +949,6 @@ func (s *SelectorOpStringContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
-
-
-
 func (p *SolomonSelectorParser) SelectorOpString() (localctx ISelectorOpStringContext) {
 	localctx = NewSelectorOpStringContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, SolomonSelectorParserRULE_selectorOpString)
@@ -981,15 +959,13 @@ func (p *SolomonSelectorParser) SelectorOpString() (localctx ISelectorOpStringCo
 		p.SetState(56)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((int64(_la) & ^0x3f) == 0 && ((int64(1) << _la) & 1341652992) != 0)) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5368184832) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1003,7 +979,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorOpNumberContext is an interface to support dynamic dispatch.
 type ISelectorOpNumberContext interface {
@@ -1038,7 +1013,7 @@ func NewEmptySelectorOpNumberContext() *SelectorOpNumberContext {
 	return p
 }
 
-func InitEmptySelectorOpNumberContext(p *SelectorOpNumberContext)  {
+func InitEmptySelectorOpNumberContext(p *SelectorOpNumberContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectorOpNumber
 }
@@ -1098,7 +1073,6 @@ func (s *SelectorOpNumberContext) ToStringTree(ruleNames []string, recog antlr.R
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorOpNumberContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectorOpNumber(s)
@@ -1111,9 +1085,6 @@ func (s *SelectorOpNumberContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
-
-
-
 func (p *SolomonSelectorParser) SelectorOpNumber() (localctx ISelectorOpNumberContext) {
 	localctx = NewSelectorOpNumberContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 8, SolomonSelectorParserRULE_selectorOpNumber)
@@ -1124,15 +1095,13 @@ func (p *SolomonSelectorParser) SelectorOpNumber() (localctx ISelectorOpNumberCo
 		p.SetState(58)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((int64(_la) & ^0x3f) == 0 && ((int64(1) << _la) & 1140326400) != 0)) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&4361551872) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1146,7 +1115,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorOpDurationContext is an interface to support dynamic dispatch.
 type ISelectorOpDurationContext interface {
@@ -1177,7 +1145,7 @@ func NewEmptySelectorOpDurationContext() *SelectorOpDurationContext {
 	return p
 }
 
-func InitEmptySelectorOpDurationContext(p *SelectorOpDurationContext)  {
+func InitEmptySelectorOpDurationContext(p *SelectorOpDurationContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectorOpDuration
 }
@@ -1221,7 +1189,6 @@ func (s *SelectorOpDurationContext) ToStringTree(ruleNames []string, recog antlr
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorOpDurationContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectorOpDuration(s)
@@ -1234,9 +1201,6 @@ func (s *SelectorOpDurationContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
-
-
-
 func (p *SolomonSelectorParser) SelectorOpDuration() (localctx ISelectorOpDurationContext) {
 	localctx = NewSelectorOpDurationContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 10, SolomonSelectorParserRULE_selectorOpDuration)
@@ -1247,15 +1211,13 @@ func (p *SolomonSelectorParser) SelectorOpDuration() (localctx ISelectorOpDurati
 		p.SetState(60)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((int64(_la) & ^0x3f) == 0 && ((int64(1) << _la) & 7864320) != 0)) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&7864320) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1269,7 +1231,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ISelectorLeftOperandContext is an interface to support dynamic dispatch.
 type ISelectorLeftOperandContext interface {
@@ -1299,7 +1260,7 @@ func NewEmptySelectorLeftOperandContext() *SelectorLeftOperandContext {
 	return p
 }
 
-func InitEmptySelectorLeftOperandContext(p *SelectorLeftOperandContext)  {
+func InitEmptySelectorLeftOperandContext(p *SelectorLeftOperandContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_selectorLeftOperand
 }
@@ -1339,7 +1300,6 @@ func (s *SelectorLeftOperandContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *SelectorLeftOperandContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterSelectorLeftOperand(s)
@@ -1352,9 +1312,6 @@ func (s *SelectorLeftOperandContext) ExitRule(listener antlr.ParseTreeListener) 
 	}
 }
 
-
-
-
 func (p *SolomonSelectorParser) SelectorLeftOperand() (localctx ISelectorLeftOperandContext) {
 	localctx = NewSelectorLeftOperandContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 12, SolomonSelectorParserRULE_selectorLeftOperand)
@@ -1365,15 +1322,13 @@ func (p *SolomonSelectorParser) SelectorLeftOperand() (localctx ISelectorLeftOpe
 		p.SetState(62)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((int64(_la) & ^0x3f) == 0 && ((int64(1) << _la) & 81604378624) != 0)) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&326417514496) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1387,7 +1342,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // INumberUnaryContext is an interface to support dynamic dispatch.
 type INumberUnaryContext interface {
@@ -1417,7 +1371,7 @@ func NewEmptyNumberUnaryContext() *NumberUnaryContext {
 	return p
 }
 
-func InitEmptyNumberUnaryContext(p *NumberUnaryContext)  {
+func InitEmptyNumberUnaryContext(p *NumberUnaryContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_numberUnary
 }
@@ -1457,7 +1411,6 @@ func (s *NumberUnaryContext) ToStringTree(ruleNames []string, recog antlr.Recogn
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *NumberUnaryContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterNumberUnary(s)
@@ -1469,9 +1422,6 @@ func (s *NumberUnaryContext) ExitRule(listener antlr.ParseTreeListener) {
 		listenerT.ExitNumberUnary(s)
 	}
 }
-
-
-
 
 func (p *SolomonSelectorParser) NumberUnary() (localctx INumberUnaryContext) {
 	localctx = NewNumberUnaryContext(p, p.GetParserRuleContext(), p.GetState())
@@ -1485,7 +1435,6 @@ func (p *SolomonSelectorParser) NumberUnary() (localctx INumberUnaryContext) {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
-
 
 	if _la == SolomonSelectorParserPLUS || _la == SolomonSelectorParserMINUS {
 		{
@@ -1505,12 +1454,10 @@ func (p *SolomonSelectorParser) NumberUnary() (localctx INumberUnaryContext) {
 		p.SetState(67)
 		p.Match(SolomonSelectorParserNUMBER)
 		if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+			// Recognition error - abort rule
+			goto errorExit
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1524,7 +1471,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // ILabelAbsentContext is an interface to support dynamic dispatch.
 type ILabelAbsentContext interface {
@@ -1552,7 +1498,7 @@ func NewEmptyLabelAbsentContext() *LabelAbsentContext {
 	return p
 }
 
-func InitEmptyLabelAbsentContext(p *LabelAbsentContext)  {
+func InitEmptyLabelAbsentContext(p *LabelAbsentContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_labelAbsent
 }
@@ -1584,7 +1530,6 @@ func (s *LabelAbsentContext) ToStringTree(ruleNames []string, recog antlr.Recogn
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *LabelAbsentContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterLabelAbsent(s)
@@ -1597,9 +1542,6 @@ func (s *LabelAbsentContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
-
-
-
 func (p *SolomonSelectorParser) LabelAbsent() (localctx ILabelAbsentContext) {
 	localctx = NewLabelAbsentContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 16, SolomonSelectorParserRULE_labelAbsent)
@@ -1608,12 +1550,10 @@ func (p *SolomonSelectorParser) LabelAbsent() (localctx ILabelAbsentContext) {
 		p.SetState(69)
 		p.Match(SolomonSelectorParserMINUS)
 		if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+			// Recognition error - abort rule
+			goto errorExit
 		}
 	}
-
-
 
 errorExit:
 	if p.HasError() {
@@ -1627,7 +1567,6 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
 
 // IIdentOrStringContext is an interface to support dynamic dispatch.
 type IIdentOrStringContext interface {
@@ -1656,7 +1595,7 @@ func NewEmptyIdentOrStringContext() *IdentOrStringContext {
 	return p
 }
 
-func InitEmptyIdentOrStringContext(p *IdentOrStringContext)  {
+func InitEmptyIdentOrStringContext(p *IdentOrStringContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
 	p.RuleIndex = SolomonSelectorParserRULE_identOrString
 }
@@ -1692,7 +1631,6 @@ func (s *IdentOrStringContext) ToStringTree(ruleNames []string, recog antlr.Reco
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-
 func (s *IdentOrStringContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(SolomonSelectorParserListener); ok {
 		listenerT.EnterIdentOrString(s)
@@ -1704,9 +1642,6 @@ func (s *IdentOrStringContext) ExitRule(listener antlr.ParseTreeListener) {
 		listenerT.ExitIdentOrString(s)
 	}
 }
-
-
-
 
 func (p *SolomonSelectorParser) IdentOrString() (localctx IIdentOrStringContext) {
 	localctx = NewIdentOrStringContext(p, p.GetParserRuleContext(), p.GetState())
@@ -1726,8 +1661,6 @@ func (p *SolomonSelectorParser) IdentOrString() (localctx IIdentOrStringContext)
 		}
 	}
 
-
-
 errorExit:
 	if p.HasError() {
 		v := p.GetError()
@@ -1740,5 +1673,3 @@ errorExit:
 	if false { goto errorExit }
 	return localctx
 }
-
-

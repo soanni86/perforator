@@ -153,20 +153,17 @@ func (d *Registry) getMappingCount() int {
 	return len(d.dsos)
 }
 
-func (d *Registry) trackingFetch(id string, ttl time.Duration, cb func() (*dso, error)) (ccache.TrackedItem[*dso], error) {
+func (d *Registry) trackingFetch(id string, ttl time.Duration, cb func() *dso) ccache.TrackedItem[*dso] {
 	item := d.cache.TrackingGet(id)
 	if item != nil {
 		// item can be .Expired() now.
 		// It is ok to return stale unwind tables.
-		return item, nil
+		return item
 	}
 
-	value, err := cb()
-	if err != nil {
-		return nil, err
-	}
+	value := cb()
 
-	return d.cache.TrackingSet(id, value, ttl), nil
+	return d.cache.TrackingSet(id, value, ttl)
 }
 
 func (d *Registry) acquireIfExists(buildID string) *refCountedDSO {
@@ -194,23 +191,20 @@ func (d *Registry) ensure(buildID string, newDSO *refCountedDSO) (*refCountedDSO
 }
 
 // Return existing DSO if it exists, otherwise build unwind table and store new DSO
-func (d *Registry) register(ctx context.Context, buildInfo *xelf.BuildInfo, file binary.UnsealedFile) (*dso, error) {
+func (d *Registry) register(ctx context.Context, buildInfo *xelf.BuildInfo, file binary.UnsealedFile) *dso {
 	buildID := buildInfo.BuildID
 
 	rcdso := d.acquireIfExists(buildID)
 	if rcdso != nil {
-		return rcdso.dso, nil
+		return rcdso.dso
 	}
 
-	item, err := d.trackingFetch(buildID, 10*time.Minute, func() (*dso, error) {
+	item := d.trackingFetch(buildID, 10*time.Minute, func() *dso {
 		return &dso{
 			ID:        d.nextid.Add(1) - 1,
 			buildInfo: buildInfo,
-		}, nil
+		}
 	})
-	if err != nil {
-		return nil, err
-	}
 
 	newDSO := &refCountedDSO{
 		dso:      item.Value(),
@@ -221,7 +215,7 @@ func (d *Registry) register(ctx context.Context, buildInfo *xelf.BuildInfo, file
 	dso, inserted := d.ensure(buildID, newDSO)
 	if !inserted {
 		item.Release()
-		return dso.dso, nil
+		return dso.dso
 	}
 
 	if file != nil {
@@ -234,7 +228,7 @@ func (d *Registry) register(ctx context.Context, buildInfo *xelf.BuildInfo, file
 		log.UInt64("id", newDSO.ID),
 	)
 
-	return newDSO.dso, nil
+	return newDSO.dso
 }
 
 func (d *Registry) release(ctx context.Context, buildID string) {

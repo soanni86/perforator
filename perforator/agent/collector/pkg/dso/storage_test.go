@@ -38,13 +38,10 @@ func TestRegistry_Simple(t *testing.T) {
 	buildID := "abacaba"
 	buildInfo := &xelf.BuildInfo{BuildID: buildID}
 
-	_, err = registry.register(ctx, buildInfo, nil)
-	require.NoError(t, err)
-
+	registry.register(ctx, buildInfo, nil)
 	require.Equal(t, buildID, registry.get(buildID).buildInfo.BuildID)
 
-	_, err = registry.register(ctx, buildInfo, nil)
-	require.NoError(t, err)
+	registry.register(ctx, buildInfo, nil)
 	require.Equal(t, 1, registry.getMappingCount())
 
 	registry.release(ctx, buildID)
@@ -77,10 +74,7 @@ func TestRegistry_Concurrent(t *testing.T) {
 		for i := 0; i < iterations; i++ {
 			buildID := buildIDs[i%len(buildIDs)]
 			buildInfo := &xelf.BuildInfo{BuildID: buildID}
-			_, err := registry.register(ctx, buildInfo, nil)
-			if err != nil {
-				return err
-			}
+			registry.register(ctx, buildInfo, nil)
 		}
 
 		return nil
@@ -174,7 +168,7 @@ func TestStorage_OneMapping(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	_, err = storage.AddMapping(
+	storage.AddMapping(
 		ctx,
 		123,
 		Mapping{Mapping: procfs.Mapping{
@@ -186,7 +180,6 @@ func TestStorage_OneMapping(t *testing.T) {
 		}},
 		nil,
 	)
-	require.NoError(t, err)
 	var loc *Location
 
 	_, err = storage.ResolveAddress(ctx, 123, 0xdeadadd7e55)
@@ -235,7 +228,7 @@ func TestStorage_OverlappingMappings(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	_, err = storage.AddMapping(
+	storage.AddMapping(
 		ctx,
 		linux.ProcessID(0),
 		Mapping{
@@ -250,8 +243,7 @@ func TestStorage_OverlappingMappings(t *testing.T) {
 		},
 		nil,
 	)
-	require.NoError(t, err)
-	_, err = storage.AddMapping(
+	storage.AddMapping(
 		ctx,
 		linux.ProcessID(0),
 		Mapping{
@@ -266,9 +258,8 @@ func TestStorage_OverlappingMappings(t *testing.T) {
 		},
 		nil,
 	)
-	require.NoError(t, err)
 
-	_, err = storage.AddMapping(
+	storage.AddMapping(
 		ctx,
 		linux.ProcessID(0),
 		Mapping{
@@ -283,7 +274,6 @@ func TestStorage_OverlappingMappings(t *testing.T) {
 		},
 		nil,
 	)
-	require.NoError(t, err)
 
 	loc, err := storage.ResolveAddress(ctx, linux.ProcessID(0), 600)
 	require.NoError(t, err)
@@ -348,8 +338,7 @@ func TestStorage_MultipleProcsAndMappings(t *testing.T) {
 		},
 	}
 	for _, mapping := range mappings {
-		_, err := storage.AddMapping(ctx, linux.ProcessID(0), mapping, nil)
-		require.NoError(t, err)
+		storage.AddMapping(ctx, linux.ProcessID(0), mapping, nil)
 	}
 
 	loc, err := storage.ResolveAddress(ctx, linux.ProcessID(0), 8400)
@@ -368,8 +357,7 @@ func TestStorage_MultipleProcsAndMappings(t *testing.T) {
 
 	newMappings := []Mapping{mappings[0], mappings[1]}
 	for _, mapping := range newMappings {
-		_, err = storage.AddMapping(ctx, linux.ProcessID(1), mapping, nil)
-		require.NoError(t, err)
+		storage.AddMapping(ctx, linux.ProcessID(1), mapping, nil)
 	}
 
 	loc, err = storage.ResolveAddress(ctx, linux.ProcessID(1), 3012)
@@ -434,11 +422,8 @@ func TestStorage_SameMappings(t *testing.T) {
 	}
 
 	for range 5 {
-		_, err = storage.AddMapping(ctx, linux.ProcessID(0), mapping, nil)
-		require.NoError(t, err)
-
-		_, err = storage.AddMapping(ctx, linux.ProcessID(0), mapping2, nil)
-		require.NoError(t, err)
+		storage.AddMapping(ctx, linux.ProcessID(0), mapping, nil)
+		storage.AddMapping(ctx, linux.ProcessID(0), mapping2, nil)
 	}
 
 	logger.Debug(ctx, "Compactify process", log.Int("pid", 0))
@@ -490,10 +475,7 @@ func TestStorage_Concurrent(t *testing.T) {
 					continue
 				}
 
-				_, err := storage.AddMapping(ctx, linux.ProcessID(pid), mappings[j], nil)
-				if err != nil {
-					return err
-				}
+				storage.AddMapping(ctx, linux.ProcessID(pid), mappings[j], nil)
 
 				if storage.registry.get(mappings[j].BuildInfo.BuildID) == nil {
 					return fmt.Errorf("no mapping `%s` found in dso map", mappings[j].BuildInfo.BuildID)
@@ -529,10 +511,7 @@ func TestStorage_Concurrent(t *testing.T) {
 					continue
 				}
 
-				_, err := storage.AddMapping(ctx, linux.ProcessID(pid), mappings[j], nil)
-				if err != nil {
-					return err
-				}
+				storage.AddMapping(ctx, linux.ProcessID(pid), mappings[j], nil)
 			}
 
 			return nil

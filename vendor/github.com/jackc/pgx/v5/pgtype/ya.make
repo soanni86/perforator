@@ -2,7 +2,7 @@ GO_LIBRARY()
 
 LICENSE(MIT)
 
-VERSION(v5.7.1)
+VERSION(v5.7.2)
 
 SRCS(
     array.go
@@ -49,6 +49,7 @@ SRCS(
     timestamp.go
     timestamptz.go
     uint32.go
+    uint64.go
     uuid.go
     xml.go
 )
@@ -100,6 +101,7 @@ GO_XTEST_SRCS(
     # timestamp_test.go
     # timestamptz_test.go
     # uint32_test.go
+    # uint64_test.go
     # uuid_test.go
     # xml_test.go
 )

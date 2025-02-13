@@ -193,10 +193,10 @@ func (m *Watcher) GetMountPoint(mountID int) *MountPoint {
 func (m *Watcher) RunPoller(ctx context.Context) error {
 	tick := time.NewTicker(MountScanPeriod)
 	for {
-		m.l.Info("Run mount info scanner")
+		m.l.Debug("Run mount info scanner")
 		err := m.scan()
 		if err != nil {
-			m.l.Error("Failed to update mount info", log.Error(err))
+			m.l.Warn("Failed to update mount info", log.Error(err))
 		}
 
 		select {
