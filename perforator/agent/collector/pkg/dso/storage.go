@@ -132,15 +132,11 @@ func (d *Storage) removeMapping(ctx context.Context, vmap *versionedMapping) {
 // Add mapping for the process.
 // Thread safe.
 // Atomic relative to RemoveProcess
-func (d *Storage) AddMapping(ctx context.Context, pid linux.ProcessID, mapping Mapping, binary binary.UnsealedFile) (*dso, error) {
+func (d *Storage) AddMapping(ctx context.Context, pid linux.ProcessID, mapping Mapping, binary binary.UnsealedFile) *dso {
 	var dso *dso
-	var err error
 
 	if mapping.BuildInfo != nil {
-		dso, err = d.registry.register(ctx, mapping.BuildInfo, binary)
-		if err != nil {
-			return nil, err
-		}
+		dso = d.registry.register(ctx, mapping.BuildInfo, binary)
 		mapping.DSO = dso
 	}
 
@@ -148,7 +144,7 @@ func (d *Storage) AddMapping(ctx context.Context, pid linux.ProcessID, mapping M
 	defer maps.lock.Unlock()
 	maps.addMappingLocked(mapping)
 
-	return dso, nil
+	return dso
 }
 
 // Remove unused process mappings.

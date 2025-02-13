@@ -498,13 +498,13 @@ func (a *processAnalyzer) processMapping(ctx context.Context, m *procfs.Mapping)
 	if mapping.Path == "" {
 		// Probably JITed mapping.
 		mapping.Path = "[JIT]"
-		_, err := a.reg.dsoStorage.AddMapping(ctx, a.proc.id, mapping, nil)
-		return err
+		a.reg.dsoStorage.AddMapping(ctx, a.proc.id, mapping, nil)
+		return nil
 	}
 
 	if vdso.IsUnsymbolizableVDSOMapping(&mapping.Mapping) {
-		_, err := a.reg.dsoStorage.AddMapping(ctx, a.proc.id, mapping, nil)
-		return err
+		a.reg.dsoStorage.AddMapping(ctx, a.proc.id, mapping, nil)
+		return nil
 	}
 
 	binary := binary.NewProcessMappingBinary(a.proc.id, a.reg.mounts, m)
@@ -578,15 +578,12 @@ func (a *processAnalyzer) processMapping(ctx context.Context, m *procfs.Mapping)
 		return err
 	}
 
-	dso, err := a.reg.dsoStorage.AddMapping(
+	dso := a.reg.dsoStorage.AddMapping(
 		ctx,
 		a.proc.id,
 		mapping,
 		binary,
 	)
-	if err != nil {
-		l.Error(ctx, "Failed to register mapping", log.Error(err))
-	}
 
 	mapping.DSO = dso
 	a.registerMapping(&mapping)
