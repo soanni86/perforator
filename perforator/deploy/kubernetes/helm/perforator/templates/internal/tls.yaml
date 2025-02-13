@@ -7,7 +7,7 @@
 {{- else }}
 {{- $hostname = (printf "%s-storage-service" (include "perforator.fullname" .)) }}
 {{- end }}
-{{- $storageCert = genSignedCert $hostname nil (list $hostname) 3650 $ca }}
+{{- $storageCert := genSignedCert $hostname nil (list $hostname) 3650 $ca }}
 {{- $storageSecretName := printf "%s-storage-crt" (include "perforator.fullname" .) }}
 apiVersion: v1
 data:
