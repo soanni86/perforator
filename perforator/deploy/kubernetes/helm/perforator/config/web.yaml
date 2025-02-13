@@ -3,7 +3,7 @@ ports:
   grpc_port: {{ .Values.web.containerPorts.grpc }} 
   metrics_port: {{ .Values.web.containerPorts.metrics }} 
 s3:
-  endpoint: {{ .Values.databases.s3.endpoint }}
+  endpoint: {{ include "perforator.s3.endpoint" . }}
   secret_key_path: "/etc/perforator/s3/secret_key.txt"
   access_key_path: "/etc/perforator/s3/access_key.txt"
   insecure: {{ .Values.databases.s3.insecure }}

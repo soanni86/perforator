@@ -2,8 +2,11 @@
 
 
 {{- $pghosts := "" }}
-{{- range .Values.databases.postgresql.endpoints }}
-{{ $pghosts = printf "%s%s," $pghosts .host }}
+{{- $port := "" }}
+{{- $endpoints := include "perforator.postgresql.endpoints" . | fromYamlArray }}
+{{- range $endpoints }}
+{{ $pghosts = printf "%s%s," $pghosts (index . "host") }}
+{{- $port = (index . "port") }}
 {{- end }}
 {{ $pghosts = $pghosts | trimSuffix "," }}
 {{- $insecure := "" }}
@@ -37,7 +40,7 @@ spec:
         - -c
         - |
           set -eu
-          /perforator/migrate postgres up --db {{ .Values.databases.postgresql.db }} --hosts {{ $pghosts }} --user {{ .Values.databases.postgresql.user }} --pass ${PASSWORD} {{ $insecure }} {{ .Values.databases.postgresql.migrations.extraArgs }}
+          /perforator/migrate postgres up --db {{ .Values.databases.postgresql.db }} --hosts {{ $pghosts }} --port {{ $port }} --user {{ .Values.databases.postgresql.user }} --pass ${PASSWORD} {{ $insecure }} {{ .Values.databases.postgresql.migrations.extraArgs }}
         env:
         - name: PASSWORD
           valueFrom:
@@ -55,7 +58,7 @@ spec:
           readOnly: {{ .readOnly }}
         {{- end }}
       volumes:
-      {{- range .Values.databases.postgresq.migrations.extraMounts }}
+      {{- range .Values.databases.postgresql.migrations.extraMounts }}
       - name: {{ .name }}
         configMap:
           name: {{ .configMap }}

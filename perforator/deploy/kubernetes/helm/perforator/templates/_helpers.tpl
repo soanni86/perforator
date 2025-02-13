@@ -122,6 +122,48 @@ Create the name of the service account to use
 */}}
 
 {{/*
+Return effective PostgreSQL endpoints.
+*/}}
+{{- define "perforator.postgresql.endpoints" -}}
+{{- if .Values.testing.enableTestingDatabases -}}
+- host: {{ printf "%s-postgresql" .Release.Name | quote }}
+  port: {{ print 5432 }}
+{{- else -}}
+{{ toYaml .Values.databases.postgresql.endpoints }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Return effective ClickHouse endpoints.
+*/}}
+{{- define "perforator.clickhouse.endpoints" -}}
+{{- if .Values.testing.enableTestingDatabases -}}
+{{- $host := printf "%s-clickhouse" .Release.Name -}}
+{{- $port := "9440" -}}
+- {{ printf "%s:%s" $host $port | quote }}
+{{- else -}}
+{{ toYaml .Values.databases.clickhouse.replicas }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Return effective S3 endpoint.
+*/}}
+{{- define "perforator.s3.endpoint" -}}
+{{- if .Values.testing.enableTestingDatabases -}}
+{{- $host := printf "%s-minio" .Release.Name -}}
+{{- $port := "9000" -}}
+{{ printf "%s:%s" $host $port | quote }}
+{{- else -}}
+{{ .Values.databases.s3.endpoint | quote }}
+{{- end -}}
+{{- end }}
+
+{{/*
+//////////////////////////////////////////////////////////////////////////////////////////// 
+*/}}
+
+{{/*
 Create secretKeyRef for one of databases
 */}}
 

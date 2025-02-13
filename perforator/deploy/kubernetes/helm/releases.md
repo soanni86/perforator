@@ -22,6 +22,14 @@ Internal changes:
 1: If you are sending patch to GitHub, specify PR. Otherwise (if you are sending patch to internal monorepo), leave unset and then specify Git commit.
 -->
 
+# Unreleased
+
+Enhancements:
++ Add perforator-dev subchart, that allows to deploy postgresql, clickhouse, minio databases
+
+Fixes:
++ Fix password secretes were deployed after the migration jobs, which in some cases caused chart installation failure
+
 # 0.2.5
 
 Enhancements:

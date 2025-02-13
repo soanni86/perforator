@@ -4,11 +4,11 @@ databases:
       user: {{ .Values.databases.postgresql.user }}
       password_env: "POSTGRES_PASSWORD"
     db: {{ .Values.databases.postgresql.db }}
-    endpoints: {{ toYaml .Values.databases.postgresql.endpoints | nindent 8 }}
+    endpoints: {{ include "perforator.postgresql.endpoints" . | nindent 8 }}
     sslmode: {{ .Values.databases.postgresql.sslmode }}
     sslrootcert: {{ .Values.databases.postgresql.sslrootcert }}
   s3:
-    endpoint: {{ .Values.databases.s3.endpoint }}
+    endpoint: {{ include "perforator.s3.endpoint" . }}
     secret_key_path: "/etc/perforator/s3/secret_key.txt"
     access_key_path: "/etc/perforator/s3/access_key.txt"
     insecure: {{ .Values.databases.s3.insecure }}
